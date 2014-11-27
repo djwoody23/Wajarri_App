@@ -245,19 +245,18 @@ function detailsInit()
 	{
 		global.favourites.add($("#details-page").data("id"));
 	}
-
-	function playMedia()
-	{
-		$("#detail-audio").data("media").play();
-	}
 	
 	$("#next").click(next);
 	$("#prev").click(previous);
    	$("#detail-favourites-add").click(addFavourite);
 
-   	$("#detail-audio").data("media", "");
+	if (typeof(Media) !== 'undefined')	// FIX: Media UNDEFINED!
+	{
+		console.log("HAS MEDIA");
 
-	$("#play").click(playMedia);
+		// Replaces the audio play function
+		$("#detail-audio")[0].play = function () { $(this).data("media").play(); };
+	}
 }
 
 function detailsShow()
@@ -277,22 +276,16 @@ function detailsShow()
 	//var Media = window.Media;
 	if (typeof(Media) !== 'undefined')	// FIX: Media UNDEFINED!
 	{
-		console.log("HAS MEDIA");
-
 		var root_path = "/android_asset/www/";
 		var path = root_path + $("#detail-audio").attr('src');
 	
-		function onSuccess()
-		{
-			//console.log("PLAYING: " + path);
-		}  
 		function onError(error)
 		{
 			console.log("FAILED: " + path);
 			console.log(JSON.stringify(error));
 		}
 		
-		$("#detail-audio").data("media", new Media(path, onSuccess, onError));
+		$("#detail-audio").data("media", new Media(path, null, onError));
 	}
 }
 
