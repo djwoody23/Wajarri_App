@@ -249,14 +249,6 @@ function detailsInit()
 	$("#next").click(next);
 	$("#prev").click(previous);
    	$("#detail-favourites-add").click(addFavourite);
-
-	if (typeof(Media) !== 'undefined')	// FIX: Media UNDEFINED!
-	{
-		console.log("HAS MEDIA");
-
-		// Replaces the audio play function
-		$("#detail-audio")[0].play = function () { $(this).data("media").play(); };
-	}
 }
 
 function detailsShow()
@@ -273,9 +265,10 @@ function detailsShow()
     $("#detail-description").html(info.description);
     $("#detail-image").css("background-image", "url(" + info.image + ")");
 	
-	//var Media = window.Media;
 	if (typeof(Media) !== 'undefined')	// FIX: Media UNDEFINED!
 	{
+		console.log("HAS MEDIA");
+
 		var root_path = "/android_asset/www/";
 		var path = root_path + $("#detail-audio").attr('src');
 	
@@ -285,7 +278,9 @@ function detailsShow()
 			console.log(JSON.stringify(error));
 		}
 		
-		$("#detail-audio").data("media", new Media(path, null, onError));
+		$("#detail-audio").data("media", new Media(path, undefined, onError));
+		// Replaces the audio play function
+		$("#detail-audio")[0].play = function () { $(this).data("media").play(); };
 	}
 }
 
@@ -303,7 +298,6 @@ $(document).on("pagecreate", "#fav-page", favouritesInit);
 //pageinit will happen only once
 $(document).on("pageshow", "#fav-page" , favouritesShow);
 $(document).on("pagebeforeshow", "#details-page", detailsShow);
-
 
 //tap event for mobile devices All pages
 $(function()
@@ -324,7 +318,3 @@ $(function()
 		$.mobile.loadPage("#" + pages[i].id, { showLoadMsg: false } );
 	}
 });
-
-
-
-
