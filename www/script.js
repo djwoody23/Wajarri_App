@@ -1,3 +1,19 @@
+function sortValue(id)
+{
+	return function(a, b)
+	{
+		return a[id].toLowerCase().localeCompare(b[id].toLowerCase());
+	};
+}
+
+function findValue(id, value)
+{
+	return function(a)
+	{
+		return a[id].toLowerCase().match(value.toLowerCase());
+	};
+}
+
 var global =
 {
 	dictionary:
@@ -5,6 +21,19 @@ var global =
 		data: [],
 		english: [],
 		wajarri: [],
+		
+		init: function()
+		{
+			//ajax call to Json Database
+			$.ajax({
+				type:'GET',
+				dataType:'json',
+				async: false,
+				url: "wajarriDic201114.json",
+				success: this.setData,
+				error: function(err) { console.log("It's broke: " + err); }
+			});
+		},
 		
 		setData: function(data)
 		{
@@ -18,33 +47,20 @@ var global =
 				global.dictionary.wajarri.push({ id: inf.id, text: inf.Wajarri });
 				global.dictionary.english.push({ id: inf.id, text: inf.English });
 			}
-			
-			function sort(a, b)
-			{
-				return a.text.toLowerCase().localeCompare(b.text.toLowerCase());
-			}
 
-			global.dictionary.wajarri.sort(sort);
-			global.dictionary.english.sort(sort);
-		},
-		
-		init: function()
-		{
-			//ajax call to Json Database
-			$.ajax({
-				type:'GET',
-				dataType:'json',
-				async: false,
-				url: "wajarriDic201114.json",
-				success: this.setData,
-				error: function(err) { console.log("It's broke: " + err); }
-			});
+			global.dictionary.wajarri.sort(sortValue("text"));
+			global.dictionary.english.sort(sortValue("text"));
 		}
 	},
 	
 	favourites:
 	{
 		items: [],
+		
+		init: function()
+		{
+			this.load();
+		},
 		
 		load: function()
 		{
@@ -56,11 +72,6 @@ var global =
 		save: function()
 		{
 			window.localStorage.setItem("favourites", JSON.stringify(this.items));
-		},
-		
-		init: function()
-		{
-			this.load();
 		},
 
 		clear: function()
@@ -79,59 +90,13 @@ var global =
 			this.save();
 		},
 		
-		get: function()
+		remove: function(index)
 		{
-			var values = [];
-			var items = this.items;
-			
-			for (var i = 0; i < items.length; ++i)
+			var id = this.items.indexOf(index);
+			if (id != -1)
 			{
-				var inf = global.dictionary.data[items[i]];
-				values.push({ id: inf.id, text: inf.Wajarri });
+				this.items.splice(id, 1);
 			}
-
-			values.sort(function(a, b)
-			{
-				return a.text.toLowerCase().localeCompare(b.text.toLowerCase());
-			});
-			
-			return values;
-		}
-	},
-	
-	/*recent:
-	{
-		maxlength: 20,
-		items: [],
-		
-		load: function()
-		{
-			var data = window.localStorage.getItem("recent");
-			this.items = (data && data != "") ? JSON.parse(data) : [];
-		},
-		
-		save: function()
-		{
-			window.localStorage.setItem("recent", JSON.stringify(this.items));
-			console.log(window.localStorage.getItem("recent"));
-		},
-		
-		init: function()
-		{
-			this.load();
-			console.log(window.localStorage.getItem("recent"));
-		},
-		
-		add: function(index)
-		{
-			this.load();
-			
-			if (this.items.length >= this.maxlength)
-			{
-				this.items = this.items.slice(1, global.favourites.maxlength);
-			}
-			
-			this.items.push(index);
 			
 			this.save();
 		},
@@ -147,14 +112,11 @@ var global =
 				values.push({ id: inf.id, text: inf.Wajarri });
 			}
 
-			values.sort(function(a, b)
-			{
-				return a.text.toLowerCase().localeCompare(b.text.toLowerCase());
-			});
+			values.sort(sortValue("text"));
 			
 			return values;
 		}
-	},*/
+	},
 		
 	init: function()
 	{
@@ -166,53 +128,50 @@ var global =
 //Function supplied by Josh :-)
 function searchFunction(info, id, value)
 {
-	if (value == $(id).data('search'))
-		return;
-	
-	var func = function (i)
+	if (value != $(id).data('search'))
 	{
-		return i.text.toLowerCase().match(value.toLowerCase());
-	};
-	
-	//Array copy use .slice
-	var vals = value.length ? info.filter(func) : info;//.slice(0);
-	
-	$(id).data('search', value);
-	$(id).megalist('setDataProvider', vals);
+		//Array copy use .slice
+		var vals = value.length ? info.filter(findValue("text", value)) : info;//.slice(0);
+		
+		$(id).data('search', value);
+		$(id).megalist('setDataProvider', vals);
+	}
 }
 
 
 
 
 //Megalist plugin Script to display list items	
-function loadDictionaryValues(info, page, id)
+function loadDictionaryValues(id, info)
 {
-	$(document).on("pageshow", page, function ()
+	$(document).one("pageshow", '.page:has(' + id + ')', function ()
 	{
 		$(id).megalist('updateLayout');
 	});
-		
+	
 	function itemActivation(e)
 	{
+		$(id).megalist('clearSelectedIndex', e.selectedIndex);
+
 		var item = $(e.srcElement.get());
-		var child = item.find("span[data-id]").data("id");
-		var index = parseInt(child);
+		var child_id = item.find("span[data-id]").data("id");
+		var index = parseInt(child_id);
 		
 		var target = $(e.originalEvent.target);
 		if (target.data("remove"))
 		{
 			console.log("REMOVE - " + index);
+			global.favourites.remove(index);
+			favouritesShow();
 		}
 		else
 		{
 			//store the information in the next page's data
-			var data = global.dictionary.data[index];
-			$("#details-page").data("info", data);
+			$("#details-page").data("id", index);
 			//change the page # to second page. 
 			//Now the URL in the address bar will read index.html#details-page
 			//where #details-page is the "id" of the second page
 			//we're gonna redirect to that now using changePage() method
-			$(id).megalist('clearSelectedIndex', e.selectedIndex);
 			$.mobile.changePage("#details-page");
 		}
 	}
@@ -225,7 +184,10 @@ function loadDictionaryValues(info, page, id)
 	
 	$(id).megalist();
 	$(id).megalist('setLabelFunction', listItemLabelFunction);
-	$(id).megalist('setDataProvider', info);
+	if (info)
+	{
+		$(id).megalist('setDataProvider', info);
+	}
 
 	//Change Event for list items to go to details page
 	$(id).on("change", itemActivation);
@@ -236,20 +198,26 @@ function loadDictionaryValues(info, page, id)
 //English Page Script
 function englishInit()
 {
-	loadDictionaryValues(global.dictionary.english, "#english-page", "#eng-list");
+	loadDictionaryValues("#eng-list", global.dictionary.english);
 	console.log("englishInit");
 }
 
 //Wajarri Page Script	
 function wajarriInit()
 {
-	loadDictionaryValues(global.dictionary.wajarri, "#wajarri-page", "#waj-list");
+	loadDictionaryValues("#waj-list", global.dictionary.wajarri);
 	console.log("wajarriInit");
+}
+
+function favouritesInit()
+{
+	loadDictionaryValues("#fav-list", global.favourites.get());
+	console.log("favouritesInit");
 }
 
 function favouritesShow()
 {
-	loadDictionaryValues(global.favourites.get(), "#fav-page", "#fav-list");
+	$("#fav-list").megalist('setDataProvider', global.favourites.get());
 	console.log("favouritesShow");
 }
 
@@ -257,12 +225,10 @@ function detailsInit()
 {
 	function nextprevious(diff)
 	{
-		var id = $("#details-page").data("info").id + diff;
+		var id = $("#details-page").data("id") + diff;
 		if (id >= 0 && id < global.dictionary.data.length)
 		{
-			var data = global.dictionary.data[id];
-			
-			$("#details-page").data("info", data);
+			$("#details-page").data("id", id);
 			detailsShow();
 		}
 	}
@@ -278,7 +244,7 @@ function detailsInit()
 
 	function addFavourite()
 	{
-		global.favourites.add($("#details-page").data("info").id);
+		global.favourites.add($("#details-page").data("id"));
 	}
 	
 	$("#next").click(next);
@@ -290,7 +256,8 @@ function detailsInit()
 
 function detailsShow()
 {
-    var info = $("#details-page").data("info");
+    var id = $("#details-page").data("id");
+    var info = global.dictionary.data[id];
 	
 	if (info == undefined)
 		return;
@@ -319,22 +286,12 @@ function detailsShow()
 		
 		$("#detail-audio").data("media", new Media(path, onSuccess, onError));
 
-		/*$("#play").on("click", function(e)
-		{
-			e.preventDefault();
-			console.log("PLAY PRESSED");
-			$("#detail-audio").data("media").play();
-			return false;
-		});*/
-
 		$("#play")[0].click = function(e)
 		{
 			console.log("PLAY PRESSED");
 			$("#detail-audio").data("media").play();
 		};
 	}
-	
-	//console.log(JSON.stringify(play.offset()) + " - " + play.width() + " x " + play.height());
 }
 
 
@@ -343,12 +300,13 @@ function detailsShow()
 $(document).on("pagecreate", "#english-page", englishInit);
 $(document).on("pagecreate", "#wajarri-page" , wajarriInit);
 $(document).on("pagecreate", "#details-page", detailsInit);
+$(document).on("pagecreate", "#fav-page", favouritesInit);
 
 //use pagebeforeshow
 //DONT USE PAGEINIT! 
 //the reason is you want this to happen every single time
 //pageinit will happen only once
-$(document).on("pagebeforeshow", "#fav-page" , favouritesShow);
+$(document).on("pageshow", "#fav-page" , favouritesShow);
 $(document).on("pagebeforeshow", "#details-page", detailsShow);
 
 
