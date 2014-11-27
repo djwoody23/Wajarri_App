@@ -160,7 +160,6 @@ function loadDictionaryValues(id, info)
 		var target = $(e.originalEvent.target);
 		if (target.data("remove"))
 		{
-			console.log("REMOVE - " + index);
 			global.favourites.remove(index);
 			favouritesShow();
 		}
@@ -246,12 +245,19 @@ function detailsInit()
 	{
 		global.favourites.add($("#details-page").data("id"));
 	}
+
+	function playMedia()
+	{
+		$("#detail-audio").data("media").play();
+	}
 	
 	$("#next").click(next);
 	$("#prev").click(previous);
    	$("#detail-favourites-add").click(addFavourite);
 
    	$("#detail-audio").data("media", "");
+
+	$("#play").click(playMedia);
 }
 
 function detailsShow()
@@ -268,15 +274,17 @@ function detailsShow()
     $("#detail-description").html(info.description);
     $("#detail-image").css("background-image", "url(" + info.image + ")");
 	
-	var Media = window.Media;
+	//var Media = window.Media;
 	if (typeof(Media) !== 'undefined')	// FIX: Media UNDEFINED!
 	{
+		console.log("HAS MEDIA");
+
 		var root_path = "/android_asset/www/";
 		var path = root_path + $("#detail-audio").attr('src');
 	
 		function onSuccess()
 		{
-			console.log("PLAYING: " + path);
+			//console.log("PLAYING: " + path);
 		}  
 		function onError(error)
 		{
@@ -285,12 +293,6 @@ function detailsShow()
 		}
 		
 		$("#detail-audio").data("media", new Media(path, onSuccess, onError));
-
-		$("#play")[0].click = function(e)
-		{
-			console.log("PLAY PRESSED");
-			$("#detail-audio").data("media").play();
-		};
 	}
 }
 
