@@ -33,11 +33,12 @@
     <preference name="detect-data-types"          value="true" />           <!-- ios: controls whether data types (such as phone no. and dates) are automatically turned into links by the system -->
     <preference name="exit-on-suspend"            value="true" />          <!-- ios: if set to true, app will terminate when home button is pressed -->
     <preference name="show-splash-screen-spinner" value="true" />           <!-- ios: if set to false, the spinner won't appear on the splash screen during app loading -->
-    <preference name="auto-hide-splash-screen"    value="true" />           <!-- ios: if set to false, the splash screen must be hidden using a JavaScript API -->
+    <preference name="auto-hide-splash-screen"    value="false" />           <!-- ios: if set to false, the splash screen must be hidden using a JavaScript API -->
     <preference name="disable-cursor"             value="true" />          <!-- blackberry: prevents a mouse-icon/cursor from being displayed on the app -->
     <preference name="android-minSdkVersion"      value="7" />              <!-- android: MIN SDK version supported on the target device. MAX version is blank by default. -->
     <preference name="android-installLocation"    value="auto" />           <!-- android: app install location. 'auto' will choose. 'internalOnly' is device memory. 'preferExternal' is SDCard. -->
 
+    <!-- Phonegap.com seems to use "splash" as the id rather than "screen" -->
 	<preference name="SplashScreen" value="screen"/>
 	<preference name="SplashScreenDelay" value="30000"/>
 	
@@ -63,30 +64,32 @@
 		<icon src="res/icon/android/wajarri-icon2-96dpi.png" gap:platform="android" gap:qualifier="xhdpi" density="xhdpi" />
 		
 		<!-- DUPLICATES USED FOR LOCAL BUILD -->
+		<splash src="res/screen/android/screen-hdpi-portrait.png" />
 		<splash src="res/screen/android/screen-hdpi-portrait.png" density="ldpi" />
 		<splash src="res/screen/android/screen-hdpi-portrait.png" density="mdpi" />
 		<splash src="res/screen/android/screen-hdpi-portrait.png" density="hdpi" />
 		<splash src="res/screen/android/screen-hdpi-portrait.png" density="xhdpi" />
 		<!-- DUPLICATES USED FOR LOCAL BUILD -->
-
-		<gap:splash src="res/screen/android/screen-hdpi-portrait.png" gap:platform="android" gap:qualifier="ldpi" />
-		<gap:splash src="res/screen/android/screen-hdpi-portrait.png" gap:platform="android" gap:qualifier="mdpi" />
-		<gap:splash src="res/screen/android/screen-hdpi-portrait.png" gap:platform="android" gap:qualifier="hdpi" />
-		<gap:splash src="res/screen/android/screen-hdpi-portrait.png" gap:platform="android" gap:qualifier="xhdpi" />
 	</platform>
+
+	<gap:splash src="res/screen/android/screen-hdpi-portrait.png" gap:platform="android" />
+	<gap:splash src="res/screen/android/screen-hdpi-portrait.png" gap:platform="android" gap:qualifier="ldpi" />
+	<gap:splash src="res/screen/android/screen-hdpi-portrait.png" gap:platform="android" gap:qualifier="mdpi" />
+	<gap:splash src="res/screen/android/screen-hdpi-portrait.png" gap:platform="android" gap:qualifier="hdpi" />
+	<gap:splash src="res/screen/android/screen-hdpi-portrait.png" gap:platform="android" gap:qualifier="xhdpi" />
 
 	<platform name="ios">
 		<icon src="res/icon/ios/icon-57.png" gap:platform="ios" width="57" height="57" />
 		<icon src="res/icon/ios/icon-72.png" gap:platform="ios" width="72" height="72" />
 		<icon src="res/icon/ios/icon-57-2x.png" gap:platform="ios" width="114" height="114" />
 		<icon src="res/icon/ios/icon-72-2x.png" gap:platform="ios" width="144" height="144" />
-		
-		<gap:splash src="res/screen/ios/screen-iphone-portrait.png" gap:platform="ios" width="320" height="480" />
-		<!--gap:splash src="res/screen/ios/screen-iphone-portrait-2x.png" gap:platform="ios" width="640" height="960" /-->
-		<gap:splash src="res/screen/ios/screen-iphone-portrait-568h-2x.png" gap:platform="ios" width="640" height="1136" />
-		<!--gap:splash src="res/screen/ios/screen-ipad-portrait.png" gap:platform="ios" width="768" height="1024" /-->
-		<!--gap:splash src="res/screen/ios/screen-ipad-landscape.png" gap:platform="ios" width="1024" height="768" /-->
 	</platform>
+		
+	<gap:splash src="res/screen/ios/screen-iphone-portrait.png" gap:platform="ios" width="320" height="480" />
+	<!--gap:splash src="res/screen/ios/screen-iphone-portrait-2x.png" gap:platform="ios" width="640" height="960" /-->
+	<gap:splash src="res/screen/ios/screen-iphone-portrait-568h-2x.png" gap:platform="ios" width="640" height="1136" />
+	<!--gap:splash src="res/screen/ios/screen-ipad-portrait.png" gap:platform="ios" width="768" height="1024" /-->
+	<!--gap:splash src="res/screen/ios/screen-ipad-landscape.png" gap:platform="ios" width="1024" height="768" /-->
 	
     <access origin="*"/>
 
