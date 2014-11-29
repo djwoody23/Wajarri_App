@@ -70,13 +70,20 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 	padding-left: 30%;
+<<<<<<< HEAD
 	padding-right: 10% !important;
+=======
+>>>>>>> b1bcb6c797f3c79bd0d52415ceb21e6241c1aa18
 	bottom: 0px;
 	
 }
 /*End Home page styling*/
 
 .pageheader {
+<<<<<<< HEAD
+=======
+	position: fixed;
+>>>>>>> b1bcb6c797f3c79bd0d52415ceb21e6241c1aa18
 	width: 100%;
 	height: 50px;
 }
@@ -99,7 +106,11 @@ body {
 
 .page {
 	background-color: rgba(0, 0, 0, 0) !important;
+<<<<<<< HEAD
 	height: 100%;
+=======
+	/*height: 100%;*/
+>>>>>>> b1bcb6c797f3c79bd0d52415ceb21e6241c1aa18
 	left: 0;
 	right: 0;
 }
@@ -128,7 +139,11 @@ body {
 .megalist
 {
 	position: absolute;
+<<<<<<< HEAD
 	top: 40px;
+=======
+	top: 50px;
+>>>>>>> b1bcb6c797f3c79bd0d52415ceb21e6241c1aa18
 	bottom: 0;
 	left: 0;
 	right: 0;
@@ -174,7 +189,11 @@ body {
 .content, .content-details {
 	position: absolute;
 	top: 50px;
+<<<<<<< HEAD
 	bottom: 59px;
+=======
+	bottom: 56px;
+>>>>>>> b1bcb6c797f3c79bd0d52415ceb21e6241c1aa18
 	left: 0;
 	right: 0;
 }
@@ -249,8 +268,12 @@ body {
 #information-page {
 	color: #FFF !important;
 	text-shadow: none !important;
+<<<<<<< HEAD
 	/*background: rgba(0,0,0,.3) !important;*/
 	padding-top: 0px !important;
+=======
+	background: rgba(0,0,0,.3) !important;
+>>>>>>> b1bcb6c797f3c79bd0d52415ceb21e6241c1aa18
 }
 
 #information-page .ui-block-b p {
@@ -262,9 +285,18 @@ body {
 }
 
 #information-page .ui-grid-a {
+<<<<<<< HEAD
 	overflow-y: auto;
 	text-align: center;
 	font-family: sans-serif;
+=======
+	top: 0px;
+	bottom: 75px;
+	overflow-y: auto;
+	text-align: center;
+	font-family: fantasy, "Adobe Garamond Pro Bold", "Adobe Garamond Pro", "BankGothic Md BT", "BankGothic Lt BT";
+	font-weight: bold;
+>>>>>>> b1bcb6c797f3c79bd0d52415ceb21e6241c1aa18
 }
 
 #information-page .ui-grid-a img {
