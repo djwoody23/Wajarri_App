@@ -300,9 +300,9 @@ $(document).ready(function()
 	{
 		console.log("onReady");
 
-        if(device.platform.toLowerCase() === "ios")
+        if (device.platform.toLowerCase() === "ios")
         {
-            $("body").css("top", "20px");
+            $("html").css("top", "20px");
         }
 
         var pages = $(".page");
