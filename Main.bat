@@ -1,6 +1,6 @@
 @ECHO OFF
 
-CALL %~d0\Libs\Setup.bat > NUL
+CALL "%~d0\Libs\Setup.bat" > NUL
 
 SET ADB="%ANDROID_HOME%\platform-tools\adb.exe"
 SET EMULATOR="%ANDROID_HOME%\tools\emulator.exe"
@@ -11,20 +11,39 @@ SET APK_ACTIVITY=
 SET APK_SIZE=
 
 CALL :UPDATE "%~1"
-ECHO.
 
 
 :START
+CALL :MAINMENUTEXT
+CALL :PARSE :MAINMENU
+GOTO :START
 
-ECHO CURRENT DIR:   %CD%
+
+
+:PARSE
+SETLOCAL
+SET /P QUERY=Input: 
+CLS
+:PARSELOOP
+IF "%QUERY%"=="" GOTO :PARSEEND
+CALL :MENUSEPARATOR
+CALL %1 %QUERY:~0,1%
+SET "QUERY=%QUERY:~1%"
+GOTO :PARSELOOP
+:PARSEEND
+ENDLOCAL
+GOTO :EOF
+
+
+:MAINMENUTEXT
+CALL :MENUSEPARATOR
+ECHO CURRENT DIR:   "%CD%"
 ECHO.
 ECHO CURRENT APK:   %APK%
 ECHO PACKAGE:       %APK_PACKAGE%
 ECHO ACTIVITY:      %APK_ACTIVITY%
-ECHO SIZE:          %APK_SIZE%KB
-ECHO.
-ECHO.------------------------------------------------------------------------
-ECHO.
+ECHO SIZE:          %APK_SIZE%
+CALL :MENUSEPARATOR
 ECHO (1) Start Emulator
 ECHO (2) Start Log APK
 ECHO (3) Start Log Error           (Useful if program crashing)
@@ -32,42 +51,54 @@ ECHO.
 ECHO (4) Set Current Dir
 ECHO (5) Set APK
 ECHO.
-ECHO (7) Initialize Platform       (PHONEGAP)
+ECHO (6) Compress For Upload To Phonegap
+ECHO (7) Initialize Platform
 ECHO.
-ECHO (8) Build APK                 (PHONEGAP)
+ECHO (8) Build APK
 ECHO (9) Install APK
 ECHO (0) Run APK
-ECHO.
-ECHO.------------------------------------------------------------------------
-ECHO.
+CALL :MENUSEPARATOR
 ECHO (H) Help
 ECHO (Q) Quit
+CALL :MENUSEPARATOR
+GOTO :EOF
+
+:MAINMENU
+IF %1==1 CALL :EMULATOR
+IF %1==2 CALL :LOGAPK
+IF %1==3 CALL :LOGERROR
+IF %1==4 CALL :SETDIR
+IF %1==5 CALL :SETAPK
+IF %1==6 CALL :COMPRESS
+IF %1==7 CALL :INITPLATFORM
+IF %1==8 CALL :BUILDAPK
+IF %1==9 CALL :INSTAPK
+IF %1==0 CALL :RUNAPK
+IF /I %1==h CALL :HELP
+IF /I %1==q EXIT
+GOTO :EOF
+
+:MENUSEPARATOR
 ECHO.
 ECHO.------------------------------------------------------------------------
 ECHO.
-
-SET /P QUERY=Input: 
-
-CLS
-ECHO.
-
-CALL :PARSE
-
-GOTO :START
+GOTO :EOF
 
 
 
 :UPDATE
 
-SET APK=%~f1
+SET APK="%~f1"
 
-IF NOT EXIST "%APK%" (
+IF NOT EXIST %APK% (
 	SET APK_PACKAGE=
 	SET APK_ACTIVITY=
 	SET APK_SIZE=
 	GOTO :EOF
 )
-SET /A APK_SIZE=%~z1 / 1024
+
+SET "APK_SIZE=%~z1"
+CALL :COMMA %APK_SIZE%
 
 ::SETLOCAL
 SET "APK_SED=aapt dump badging %APK% ^| sed -n -e "
@@ -79,26 +110,16 @@ FOR /F %%A IN ('%APK_SED%%APK_ACTIVITY_PATTERN%') DO (SET "APK_ACTIVITY=%%A")
 GOTO :EOF
 
 
+:COMMA
+SET "VALUE=%1"
+SET "APK_SIZE= Bytes"
+:COMMALOOP
+SET "APK_SIZE=%VALUE:~-3%%APK_SIZE%"
+SET "VALUE=%VALUE:~0,-3%"
+IF "%VALUE%"=="" GOTO :EOF
+SET "APK_SIZE=,%APK_SIZE%"
+GOTO :COMMALOOP
 
-:PARSE
-IF "%QUERY%"=="" GOTO :EOF
-SET CHAR=%QUERY:~0,1%
-SET QUERY=%QUERY:~1%
-IF %CHAR%==1 CALL :EMULATOR
-IF %CHAR%==2 CALL :LOGAPK
-IF %CHAR%==3 CALL :LOGERROR
-IF %CHAR%==4 CALL :SETDIR
-IF %CHAR%==5 CALL :SETAPK
-IF %CHAR%==7 CALL :INITPLATFORM
-IF %CHAR%==8 CALL :BUILDAPK
-IF %CHAR%==9 CALL :INSTAPK
-IF %CHAR%==0 CALL :RUNAPK
-IF /I %CHAR%==h CALL :HELP
-IF /I %CHAR%==q EXIT
-ECHO.
-ECHO.------------------------------------------------------------------------
-ECHO.
-GOTO :PARSE
 
 
 
@@ -133,6 +154,12 @@ GOTO :EOF
 ECHO SET APK
 SET /P APK=Drag apk file here: 
 CALL :UPDATE %APK%
+GOTO :EOF
+
+
+:COMPRESS
+DEL Phonegap_App.zip > NUL
+7z a -tzip Phonegap_App.zip config.xml res\ www\
 GOTO :EOF
 
 
