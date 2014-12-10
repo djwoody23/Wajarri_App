@@ -299,12 +299,6 @@ $(document).ready(function()
 	function onReady()
 	{
 		console.log("onReady");
-
-        if (device.platform.toLowerCase() === "ios")
-        {
-            $("html").css("top", "20px");
-        }
-
         var pages = $(".page");
         for (var i = 0; i < pages.length; ++i)
         {
@@ -321,6 +315,12 @@ $(document).ready(function()
 
 		function onDeviceReady()
 		{
+	        if (typeof(window.device) !== 'undefined' &&
+	        	device.platform.toLowerCase() === "ios")
+	        {
+	            $("html").css("top", "20px");
+	        }
+
 			onReady();
 			navigator.splashscreen.hide();
 		}
