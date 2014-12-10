@@ -1,5 +1,4 @@
 @ECHO OFF
-
 CALL "%~d0\Libs\Setup.bat" > NUL
 
 SET ADB="%ANDROID_HOME%\platform-tools\adb.exe"
@@ -10,8 +9,15 @@ SET APK_PACKAGE=
 SET APK_ACTIVITY=
 SET APK_SIZE=
 
-CALL :UPDATE "%~1"
+::CALL :UPDATE "%~1"
 
+SET PGB_ID=989344
+
+SET PATTERN="/^\s*<name>/s/^\s*<name>\s*\([^<]*\)\s*<\/name>\s*$/\1/p"
+FOR /F "delims=" %%A IN ('sed -n -e %PATTERN% config.xml') DO (
+	CALL :UPDATE "%~dp0\%%A-debug.apk"
+	GOTO :START
+)
 
 :START
 CALL :MAINMENUTEXT
@@ -21,7 +27,7 @@ GOTO :START
 
 
 :PARSE
-SETLOCAL
+::SETLOCAL
 SET /P QUERY=Input: 
 CLS
 :PARSELOOP
@@ -31,33 +37,31 @@ CALL %1 %QUERY:~0,1%
 SET "QUERY=%QUERY:~1%"
 GOTO :PARSELOOP
 :PARSEEND
-ENDLOCAL
+::ENDLOCAL
 GOTO :EOF
 
 
 :MAINMENUTEXT
 CALL :MENUSEPARATOR
-ECHO CURRENT DIR:   "%CD%"
-ECHO.
+ECHO CURRENT DIR:   "%__CD__%"
 ECHO CURRENT APK:   %APK%
 ECHO PACKAGE:       %APK_PACKAGE%
 ECHO ACTIVITY:      %APK_ACTIVITY%
 ECHO SIZE:          %APK_SIZE%
+ECHO PHONEGAP ID:   %PGB_ID%
 CALL :MENUSEPARATOR
 ECHO (1) Start Emulator
 ECHO (2) Start Log APK
 ECHO (3) Start Log Error           (Useful if program crashing)
-ECHO.
 ECHO (4) Set Current Dir
 ECHO (5) Set APK
-ECHO.
-ECHO (6) Compress For Upload To Phonegap
-ECHO (7) Initialize Platform
-ECHO.
+ECHO (6) Initialize Platform
+ECHO (7) Compress ^& Upload To Phonegap
 ECHO (8) Build APK
 ECHO (9) Install APK
 ECHO (0) Run APK
 CALL :MENUSEPARATOR
+ECHO (P) Command Prompt
 ECHO (G) Git GUI
 CALL :MENUSEPARATOR
 ECHO (H) Help
@@ -66,20 +70,24 @@ CALL :MENUSEPARATOR
 GOTO :EOF
 
 :MAINMENU
-IF %1==1 CALL :EMULATOR
-IF %1==2 CALL :LOGAPK
-IF %1==3 CALL :LOGERROR
-IF %1==4 CALL :SETDIR
-IF %1==5 CALL :SETAPK
-IF %1==6 CALL :COMPRESS
-IF %1==7 CALL :INITPLATFORM
-IF %1==8 CALL :BUILDAPK
-IF %1==9 CALL :INSTAPK
-IF %1==0 CALL :RUNAPK
-IF /I %1==g CALL :GITGUI
-IF /I %1==h CALL :HELP
+IF %1==1 GOTO :EMULATOR
+IF %1==2 GOTO :LOGAPK
+IF %1==3 GOTO :LOGERROR
+IF %1==4 GOTO :SETDIR
+IF %1==5 GOTO :SETAPK
+IF %1==6 GOTO :INITPLATFORM
+IF %1==7 GOTO :COMPRESS
+IF %1==8 GOTO :BUILDAPK
+IF %1==9 GOTO :INSTAPK
+IF %1==0 GOTO :RUNAPK
+IF /I %1==p GOTO :PROMPT
+IF /I %1==g GOTO :GITGUI
+IF /I %1==h GOTO :HELP
 IF /I %1==q EXIT
+ECHO UNKNOWN COMMAND "%1"
 GOTO :EOF
+
+
 
 :MENUSEPARATOR
 ECHO.
@@ -91,7 +99,8 @@ GOTO :EOF
 
 :UPDATE
 
-SET APK="%~f1"
+SET "APK=%~nx1"
+SET APK="%~dp1%APK: =_%"
 
 IF NOT EXIST %APK% (
 	SET APK_PACKAGE=
@@ -100,8 +109,7 @@ IF NOT EXIST %APK% (
 	GOTO :EOF
 )
 
-SET "APK_SIZE=%~z1"
-CALL :COMMA %APK_SIZE%
+CALL :COMMA %APK%
 
 ::SETLOCAL
 SET "APK_SED=aapt dump badging %APK% ^| sed -n -e "
@@ -114,7 +122,7 @@ GOTO :EOF
 
 
 :COMMA
-SET "VALUE=%1"
+SET "VALUE=%~z1"
 SET "APK_SIZE= Bytes"
 :COMMALOOP
 SET "APK_SIZE=%VALUE:~-3%%APK_SIZE%"
@@ -124,14 +132,11 @@ SET "APK_SIZE=,%APK_SIZE%"
 GOTO :COMMALOOP
 
 
-
-
-
-
 :EMULATOR
 ECHO RUN EMULATOR
-SET /P AVD=Enter device name: 
-START "Emulator" %EMULATOR% -avd %AVD%
+START "" "%ANDROID_HOME%\AVD Manager.exe"
+::SET /P AVD=Enter device name: 
+::START "Emulator" %EMULATOR% -avd %AVD%
 GOTO :EOF
 
 :LOGAPK
@@ -162,7 +167,8 @@ GOTO :EOF
 
 :COMPRESS
 DEL Phonegap_App.zip > NUL
-7z a -tzip Phonegap_App.zip config.xml res\ www\
+7z a -tzip "%CD%\Phonegap_App.zip" config.xml res\ www\
+pgbuild update %PGB_ID% "%CD%\PhoneGap_App.zip"
 GOTO :EOF
 
 
@@ -199,7 +205,7 @@ GOTO :EOF
 ECHO BUILD APK
 CALL phonegap build android
 :: --verbose
-COPY "platforms\android\ant-build\*-debug.apk" "."
+COPY "platforms\android\ant-build\CordovaApp-debug.apk" %APK%
 CALL :UPDATE %APK%
 GOTO :EOF
 
@@ -220,6 +226,12 @@ ECHO.
 CALL %ADB% shell am start -S -n %APK_PACKAGE%/%APK_ACTIVITY%
 GOTO :EOF
 
+
+:PROMPT
+ECHO OPEN COMMAND PROMPT
+START "Libs Prompt" CMD /K MODE CON: COLS=160 LINES=1000 & CLS
+:: "%~d0\Libs\setup.bat"
+GOTO :EOF
 
 :GITGUI
 ECHO RUN GIT GUI

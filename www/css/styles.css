@@ -147,7 +147,8 @@ body {
 
 #home .header
 {
-	width: 100%;
+	padding: 10px 0 0 0;
+	width: auto;
 }
 
 #home img {
@@ -160,7 +161,7 @@ body {
 #home .footer {
 	margin: 10px auto;
 	background: rgba(255,255,255,.5);
-	position: relative;
+	position: absolute;
 	height: 100px;
 	max-width: 500px;
 }

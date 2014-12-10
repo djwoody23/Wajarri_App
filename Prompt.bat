@@ -1,1 +1,0 @@
-@CMD /K "%~d0\Libs\setup.bat"

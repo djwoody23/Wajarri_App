@@ -1,1 +1,0 @@
-@CALL "%~dp0\Main.bat" "%~dp0\CordovaApp-debug.apk"
