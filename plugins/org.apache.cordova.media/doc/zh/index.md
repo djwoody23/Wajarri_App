@@ -386,15 +386,9 @@
         var myMedia = new Media("documents://beer.mp3")
         
 
-### Windows 8 的怪癖
+### Tizen 怪癖
 
-*   如果沒有提供完整的路徑，錄音被放在應用程式/temp 目錄。這可以通過訪問 `檔` API 使用 `LocalFileSystem.TEMPORARY` 或 ' ms appdata： temp / / /<filename>' URI。
-
-*   在記錄時指定的任何子目錄中必須已經存在。
-
-### 泰怪癖
-
-*   不支援在 Tizen 設備上。
+*   Tizen 設備上不支援。
 
 ## media.stop
 
@@ -403,7 +397,7 @@
     media.stop() ；
     
 
-### 簡單的例子
+### 快速的示例
 
     // Play audio
     //
@@ -439,12 +433,12 @@
 
 ### 支援的平臺
 
-*   安卓系統
+*   Android 系統
 *   iOS
 *   Windows Phone 7 和 8
 *   Windows 8
 
-### 簡單的例子
+### 快速的示例
 
     // Record audio
     //
@@ -472,9 +466,9 @@
     }
     
 
-### 泰怪癖
+### Tizen 怪癖
 
-*   不支援在 Tizen 設備上。
+*   Tizen 設備上不支援。
 
 ## MediaError
 
@@ -484,11 +478,11 @@ A `MediaError` 物件返回到 `mediaError` 時出現錯誤的回呼函數。
 
 *   **代碼**： 下面列出的預定義的錯誤代碼之一。
 
-*   **消息**： 錯誤訊息，描述該錯誤的詳細資訊。
+*   **消息**： 錯誤訊息描述該錯誤的詳細資訊。
 
 ### 常量
 
-*   `MediaError.MEDIA_ERR_ABORTED`= 1
-*   `MediaError.MEDIA_ERR_NETWORK`= 2
-*   `MediaError.MEDIA_ERR_DECODE`= 3
-*   `MediaError.MEDIA_ERR_NONE_SUPPORTED`= 4
+*   `MediaError.MEDIA_ERR_ABORTED` = 1
+*   `MediaError.MEDIA_ERR_NETWORK` = 2
+*   `MediaError.MEDIA_ERR_DECODE` = 3
+*   `MediaError.MEDIA_ERR_NONE_SUPPORTED` = 4

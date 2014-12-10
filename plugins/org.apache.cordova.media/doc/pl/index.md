@@ -23,7 +23,7 @@ Plugin daje możliwość nagrywania i odtwarzania plików audio na urządzeniu.
 
 **Uwaga**: Obecna implementacja nie stosować się do specyfikacji W3C do przechwytywania mediów i jest dostarczane jedynie dla wygody. Przyszłej realizacji będą przylegać do najnowszych specyfikacji W3C i może potępiać bieżące interfejsów API.
 
-## Instalacja
+## Instalacji
 
     cordova plugin add org.apache.cordova.media
     
@@ -31,7 +31,7 @@ Plugin daje możliwość nagrywania i odtwarzania plików audio na urządzeniu.
 ## Obsługiwane platformy
 
 *   Android
-*   BlackBerry 10
+*   Jeżyna 10
 *   iOS
 *   Windows Phone 7 i 8
 *   Tizen
@@ -223,7 +223,7 @@ Rozpoczyna się lub wznawia odtwarzanie pliku audio.
     }
     
 
-### Dziwactwa iOS
+### iOS dziwactwa
 
 *   **numberOfLoops**: przekazać tę opcję, aby `play` Metoda, aby określić ile razy chcesz, pliku multimedialnego do gry, np.:
     
@@ -371,11 +371,11 @@ Rozpoczyna nagrywanie pliku audio.
     }
     
 
-### Dziwactwa Androida
+### Android dziwactwa
 
 *   Urządzenia z systemem Android nagrywanie dźwięku w formacie Adaptive Multi-Rate. Określony plik powinien kończyć się rozszerzeniem *AMR* .
 
-### Dziwactwa iOS
+### iOS dziwactwa
 
 *   iOS tylko rekordy do plików typu *.wav* i zwraca błąd, jeśli nazwa pliku rozszerzenie jest nie prawidłowe.
 
@@ -386,13 +386,7 @@ Rozpoczyna nagrywanie pliku audio.
         var myMedia = new Media("documents://beer.mp3")
         
 
-### Windows 8 dziwactwa
-
-*   Jeśli nie podano pełną ścieżkę, nagrywanie jest umieszczony w katalogu AppData/temp. To mogą być dostępne za pośrednictwem `Plik` Za pomocą interfejsu API `LocalFileSystem.TEMPORARY` lub "ms-appdata: temp / / / /<filename>"URI.
-
-*   Każdy podkatalog określony w rekordowym czasie musi już istnieć.
-
-### Dziwactwa Tizen
+### Osobliwości Tizen
 
 *   Nie obsługiwane na Tizen urządzenia.
 
@@ -472,7 +466,7 @@ Zatrzymuje nagrywanie pliku audio.
     }
     
 
-### Dziwactwa Tizen
+### Osobliwości Tizen
 
 *   Nie obsługiwane na Tizen urządzenia.
 
@@ -488,7 +482,7 @@ A `MediaError` obiekt jest zwracany do `mediaError` funkcji wywołania zwrotnego
 
 ### Stałe
 
-*   `MediaError.MEDIA_ERR_ABORTED`= 1
-*   `MediaError.MEDIA_ERR_NETWORK`= 2
-*   `MediaError.MEDIA_ERR_DECODE`= 3
-*   `MediaError.MEDIA_ERR_NONE_SUPPORTED`= 4
+*   `MediaError.MEDIA_ERR_ABORTED` = 1
+*   `MediaError.MEDIA_ERR_NETWORK` = 2
+*   `MediaError.MEDIA_ERR_DECODE` = 3
+*   `MediaError.MEDIA_ERR_NONE_SUPPORTED` = 4
