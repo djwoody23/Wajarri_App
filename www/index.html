@@ -2,22 +2,24 @@
 <html>
     <head>
         <meta charset="utf-8">
+
+        <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7" />
         <title>Wajarri Dictionary</title>
+
+        <link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
         <!-- mobile layout sized appropriately to viewport width and not zoomable -->
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
         <!--link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.css" /-->
-        <link href="plugins/jquery.mobile-1.4.4.css" rel="stylesheet" type="text/css">
-        <link href="plugins/megalist.css" rel="stylesheet" type="text/css">
+        <link href="plugins/jquery.mobile-1.4.5.css" rel="stylesheet" type="text/css">
         <link href="css/styles.css" rel="stylesheet" type="text/css">
         <!--script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
         <script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script-->
         <script src="plugins/jquery-1.11.1.js"></script>
-        <script src="plugins/jquery.mobile-1.4.4.js"></script>
+        <script src="plugins/jquery.mobile-1.4.5.js"></script>
 
         <script src="cordova.js"></script>
-        <script src="plugins/megalist.js"></script>
-        <script src="plugins/raf.js"></script>
         <script src="js/global.js" defer></script>
         <script src="js/script.js" defer></script>
     </head>
@@ -25,90 +27,106 @@
         <!--Home page-->
         <div data-role="page" id="home" class="page">
             <!-- Header -->
-            <div class="header">
-                <div class="logo"></div>
-            </div>
             <!-- Content-->
-            <div data-role="content">
+            <div class="content" data-role="content">
+                <div class="header">
+                    <img src="images/wajarri-logo2.png" />
+                </div>
                 <div data-role="controlgroup" class="homeList">
-                    <a href="#wajarri-page" class="shadow" data-role="button" data-inset="true" data-transition="pop">Wajarri</a>
-                    <a href="#english-page" class="shadow" data-role="button" data-inset="true" data-transition="pop">English</a>
-                    <a href="#fav-page" class="shadow" data-role="button" data-inset="true" data-transition="pop">Favourites</a>
+                    <a href="#wajarri-page" class="shadow" data-role="button" data-inset="true">Wajarri</a>
+                    <a href="#english-page" class="shadow" data-role="button" data-inset="true">English</a>
+                    <a href="#fav-page" class="shadow" data-role="button" data-inset="true">Favourites</a>
+                </div>
+                <div class="footer center-horizontal">
+                    <div class="dock-left">
+                        <img src="images/bundiyarra logo.png" />
+                    </div>
+                    <div class="dock-right">
+                        <div class="dock-top">
+                            <img src="images/ILS_logo.png" />
+                        </div>
+                        <div class="dock-bottom">
+                            &copy; Bundiyarra Aboriginal Community Aboriginal Corporation
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- The footer -->
-            <div class="ui-grid-a">
-                <div class="ui-block-a"><img src="images/bundiyarra logo.png" width="50" height="100" /></div>
-                <div class="ui-block-b"><h4>&copy; Bundiyarra Aboriginal Community Aboriginal Corporation</h4></div>
-                <div class="ui-block-c"></div>
-            </div>
         </div>
 
         <!--Wajarri page -->
         <div data-role="page" id="wajarri-page" class="page">
             <!-- Header -->
-            <div class="pageheader" data-role="header" data-theme="a" data-position="fixed" data-id="myHeader">
-                <a href="#" data-rel="back" data-role="button" data-transition="pop">Go back</a>
+            <div data-role="header" class="pageheader" data-theme="a" data-position="fixed" data-id="myHeader">
+                <a href="#" data-rel="back" data-role="button">Go back</a>
                 <h1>Wajarri</h1>
             </div>
+
+
+
+
             <!-- Content-->
-            <div class="content">
-                <input type="search" onchange="searchFunction(global.dictionary.wajarri, '#waj-list', this.value);" oninput="this.onchange();" onkeyup="this.onchange();">
-                <div class="megalist" id="waj-list"></div>
+            <div class="content" data-role="content">
+                <input id="waj-list-search" data-type="search">
+                <div id="waj-list"></div>
             </div>
+
+
+
+
             <!-- The footer navigation -->
-            <nav data-role="navbar" id="bottomNavBtns">
+            <nav data-role="navbar" data-id="myfooter" id="bottomNavBtns">
                 <ul>
-                    <li><a href="#home"  data-icon="home"  data-transition="pop">Home</a></li>
-                    <li><a href="#fav-page"  data-icon="star" data-transition="pop">Favourites</a></li>
-                    <li><a href="#information-page"  data-icon="info" data-transition="pop">Info</a></li>
+                    <li><a href="#home"  data-icon="home">Home</a></li>
+                    <li><a href="#fav-page"  data-icon="star">Favourites</a></li>
+                    <li><a href="#information-page"  data-icon="info">Info</a></li>
                 </ul>
             </nav>
         </div>
         <!--English page -->
         <div data-role="page" id="english-page" class="page">
             <!-- Header -->
-            <div data-role="header" class="pageheader" data-theme="" data-position="fixed" data-id="myHeader">
-                <a href="#" data-rel="back" data-role="button" data-transition="pop">Go back</a>
+            <div data-role="header" class="pageheader" data-theme="a" data-position="fixed" data-id="myHeader">
+                <a href="#" data-rel="back" data-role="button">Go back</a>
                 <h1>English</h1>
             </div>
             <!-- Content-->
-            <div class="content">
-                <input type="search" onchange="searchFunction(global.dictionary.english, '#eng-list', this.value);" oninput="this.onchange();" onkeyup="this.onchange();">
-                <div class="megalist" id="eng-list"></div>
+            <div class="content" data-role="content">
+                <input id="eng-list-search" data-type="search" >
+                <div id="eng-list"></div>
             </div>
             <!-- The footer navigation -->
             <nav data-role="navbar" data-id="myfooter" id="bottomNavBtns">
                 <ul>
-                    <li><a href="#home"  data-icon="home"  data-transition="pop">Home</a></li>
-                    <li><a href="#fav-page"  data-icon="star" data-transition="pop">Favourites</a></li>
-                    <li><a href="#information-page"  data-icon="info" data-transition="pop">Info</a></li>
+                    <li><a href="#home"  data-icon="home">Home</a></li>
+                    <li><a href="#fav-page"  data-icon="star">Favourites</a></li>
+                    <li><a href="#information-page"  data-icon="info">Info</a></li>
                 </ul>
             </nav>
         </div>
         <!--Favourites page -->
         <div data-role="page" id="fav-page" class="page">
             <!-- Header -->
-            <div data-role="header" class="pageheader" data-theme="" data-position="fixed" data-id="myHeader">
-                <a href="#" data-rel="back" data-role="button" data-transition="pop">Go back</a>
+            <div data-role="header" class="pageheader" data-theme="a" data-position="fixed" data-id="myHeader">
+                <a href="#" data-rel="back" data-role="button">Go back</a>
                 <h1>Favourites</h1>
             </div>
             <!-- Content-->
-            <div class="content">
-                <div class="megalist" id="fav-list"></div>
+            <div class="content" data-role="content">
+                <div id="fav-list"></div>
             </div>
             <!-- The footer navigation -->
             <nav data-role="navbar" data-id="myfooter" id="bottomNavBtns">
                 <ul>
-                    <li><a href="#home"  data-icon="home"  data-transition="pop">Home</a></li>
-                    <li><a href="#information-page"  data-icon="info" data-transition="pop">Info</a></li>
+                    <li><a href="#home"  data-icon="home">Home</a></li>
+                    <li><a href="#information-page"  data-icon="info">Info</a></li>
                 </ul>
             </nav>
         </div>
         <!--Details page -->
         <div data-role="page" id="details-page" class="page">
-            <div data-role="header" data-theme="a">
-                <a href="#" data-rel="back" data-role="button" data-transition="pop">Go back</a>
+            <div data-role="header" class="pageheader" data-theme="a" data-position="fixed" data-id="myHeader">
+                <a href="#" data-rel="back" data-role="button">Go back</a>
                 <h1>Description</h1>
                 <!-- The navigation bar -->
                 <nav data-role="navbar" id="nextBackBtns">
@@ -119,8 +137,8 @@
                 </nav>
             </div>
             <!-- The content area -->
-            <div class="content-details">
-                <div data-role="content">
+            <div class="content" data-role="content">
+                <div class="content-details">
                     <div class="ui-grid-a">
                         <div class="ui-block-a">
                             <div class="ui-bar field">
@@ -164,25 +182,25 @@
                         </div>
                     </div>
                 </div>
-                <!-- The footer navigation -->
-                <nav data-role="navbar" id="bottomNavBtns">
-                    <ul>
-                        <li><a href="#home"  data-icon="home"  data-transition="pop">Home</a></li>
-                        <li><a href="#fav-page"  data-icon="star" data-transition="pop">Favourites</a></li>
-                        <li><a href="#information-page"  data-icon="info" data-transition="pop">Info</a></li>
-                    </ul>
-                </nav>
             </div>
+            <!-- The footer navigation -->
+            <nav data-role="navbar" data-id="myfooter" id="bottomNavBtns">
+                <ul>
+                    <li><a href="#home"  data-icon="home">Home</a></li>
+                    <li><a href="#fav-page"  data-icon="star">Favourites</a></li>
+                    <li><a href="#information-page"  data-icon="info">Info</a></li>
+                </ul>
+            </nav>
         </div>
         <!--Info Page -->
         <div data-role="page" id="information-page" class="page">
             <!-- Header -->
-            <div class="pageheader" data-role="header" data-theme="a" data-position="fixed" data-id="myHeader">
-                <a href="#" data-rel="back" data-role="button" data-transition="pop">Go back</a>
+            <div data-role="header" class="pageheader" data-theme="a" data-position="fixed" data-id="myHeader">
+                <a href="#" data-rel="back" data-role="button">Go back</a>
                 <h1>Wajarri Information</h1>
             </div>
             <!-- Content-->
-            <div class="content">
+            <div class="content" data-role="content">
                 <div class="ui-grid-a">
                     <h1>The Wajarri Dictionary</h1>
                     <div class="ui-block-a"><img src="images/Wajarri Cover.png"></div>
@@ -194,16 +212,12 @@
                     east, from north of Mt Augustus, to south of
                     Talarang Peak, Western Australia.</p><p>The Wajarri Dictionary Hard Copy is available for purchase from our website <a href="http://www.bundiyarra.org.au">www.bundiyarra.org.au</a><p>
                 </div>
-                <div class="ui-block-a">
-                </div>
-                <div class="ui-block-b">
-                </div>
             </div>
             <!-- The footer navigation -->
             <nav data-role="navbar" data-id="myfooter" id="bottomNavBtns">
                 <ul>
-                    <li><a href="#home" data-icon="home" data-transition="pop">Home</a></li>
-                    <li><a href="#fav-page"  data-icon="star" data-transition="pop">Favourites</a></li>
+                    <li><a href="#home" data-icon="home">Home</a></li>
+                    <li><a href="#fav-page"  data-icon="star">Favourites</a></li>
                 </ul>
             </nav>
         </div>

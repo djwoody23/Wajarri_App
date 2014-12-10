@@ -12,7 +12,9 @@ function sortText()
     return function(a, b)
     {
         //return a.text.localeCompare(b.text);
-        return (a.text < b.text ? -1 : (a.text > b.text ? 1 : 0));
+        var at = a.text.toLowerCase();
+        var bt = b.text.toLowerCase();
+        return (at < bt ? -1 : (at > bt ? 1 : 0));
     };
 }
 
@@ -57,11 +59,11 @@ var global =
                 dataType: 'json',
                 mimeType: "application/json",
                 async: false,
-                url: "wajarriDic201114.json",
+                url: "wajarriDic03122014.json",
                 success: this.setData,
                 error: function(err)
                 {
-                    console.log("It's broke: " + err);
+                    console.log("Can't Load JSON: " + err);
                 }
             });
         },
@@ -107,6 +109,7 @@ var global =
         init: function()
         {
             this.load();
+            //this.clear();
         },
         load: function()
         {
@@ -125,11 +128,14 @@ var global =
         },
         add: function(index)
         {
-            if (this.items.indexOf(index) == -1)
+            if (index == 0 || index)
             {
-                this.items.push(index);
+                if (this.items.indexOf(index) == -1)
+                {
+                    this.items.push(index);
+                }
+                this.save();
             }
-            this.save();
         },
         remove: function(index)
         {
@@ -165,7 +171,7 @@ var global =
     }
 };
 
-(function()
+$(document).ready(function()
 {
-    //global.init();
-})();
+    global.init();
+});
