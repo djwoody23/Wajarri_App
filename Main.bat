@@ -166,9 +166,14 @@ GOTO :EOF
 
 
 :COMPRESS
+ECHO COMPRESSING
 DEL Phonegap_App.zip > NUL
-7z a -tzip "%CD%\Phonegap_App.zip" config.xml res\ www\
-pgbuild update %PGB_ID% "%CD%\PhoneGap_App.zip"
+CALL 7z a -tzip "%CD%\Phonegap_App.zip" config.xml res\ www\
+ECHO.
+ECHO UPLOADING
+CALL pgbuild update %PGB_ID% "%CD%\PhoneGap_App.zip"
+ECHO.
+ECHO COMPLETED
 GOTO :EOF
 
 
