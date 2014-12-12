@@ -318,7 +318,7 @@ $(document).ready(function()
 	        if (typeof(window.device) !== 'undefined' &&
 	        	device.platform.toLowerCase() === "ios")
 	        {
-	            $("html").css("top", "20px");
+	            $("html").css("top", "20px !important");
 	        }
 
 			onReady();

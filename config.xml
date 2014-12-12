@@ -41,9 +41,7 @@
 	<preference name="StatusBarBackgroundColor"   value="#000000" />
 	<preference name="StatusBarStyle"             value="lightcontent" />
 
-
-	<!-- Phonegap.com seems to use "splash" as the id rather than "screen" -->
-	<preference name="SplashScreen"               value="screen"/>
+	<preference name="SplashScreen"               value="splash"/>
 	<preference name="SplashScreenDelay"          value="30000"/>
 	
 	<!-- Platforms -->
@@ -60,43 +58,51 @@
 	<!--gap:plugin name="com.phonegap.plugin.statusbar" /-->
 
 	<!-- Define app icon for each platform. -->
-	<icon src="res/icon.png" />
+	<icon src="res/icon.png" gap:role="default" />
+
+	<icon src="res/android/icon/ldpi-icon.png" gap:platform="android" gap:qualifier="ldpi" platform="android" density="ldpi" />
+	<icon src="res/android/icon/mdpi-icon.png" gap:platform="android" gap:qualifier="mdpi" platform="android" density="mdpi" />
+	<icon src="res/android/icon/hdpi-icon.png" gap:platform="android" gap:qualifier="hdpi" platform="android" density="hdpi" />
+	<icon src="res/android/icon/xhdpi-icon.png" gap:platform="android" gap:qualifier="xhdpi" platform="android" density="xhdpi" />
+	<icon src="res/android/icon/xxhdpi-icon.png" gap:platform="android" gap:qualifier="xxhdpi" platform="android" density="xxhdpi" />
+
+	<!--splash src="res/android/screen/port-ldpi-screen.png" platform="android" density="port-ldpi" />
+	<splash src="res/android/screen/port-mdpi-screen.png" platform="android" density="port-mdpi" />
+	<splash src="res/android/screen/port-hdpi-screen.png" platform="android" density="port-hdpi" />
+	<splash src="res/android/screen/port-xhdpi-screen.png" platform="android" density="port-xhdpi" />
+	<splash src="res/android/screen/port-xxhdpi-screen.png" platform="android" density="port-xxhdpi" />
+
+	<splash src="res/android/screen/land-ldpi-screen.png" platform="android" density="land-ldpi" />
+	<splash src="res/android/screen/land-mdpi-screen.png" platform="android" density="land-mdpi" />
+	<splash src="res/android/screen/land-hdpi-screen.png" platform="android" density="land-hdpi" />
+	<splash src="res/android/screen/land-xhdpi-screen.png" platform="android" density="land-xhdpi" />
+	<splash src="res/android/screen/land-xxhdpi-screen.png" platform="android" density="land-xxhdpi" /-->
+
+	<gap:splash src="res/android/screen/port-ldpi-screen.png" gap:platform="android" gap:qualifier="port-ldpi" />
+	<gap:splash src="res/android/screen/port-mdpi-screen.png" gap:platform="android" gap:qualifier="port-mdpi" />
+	<gap:splash src="res/android/screen/port-hdpi-screen.png" gap:platform="android" gap:qualifier="port-hdpi" />
+	<gap:splash src="res/android/screen/port-xhdpi-screen.png" gap:platform="android" gap:qualifier="port-xhdpi" />
+	<gap:splash src="res/android/screen/port-xxhdpi-screen.png" gap:platform="android" gap:qualifier="port-xxhdpi" />
+
+	<!--gap:splash src="res/android/screen/land-ldpi-screen.png" gap:platform="android" gap:qualifier="land-ldpi" />
+	<gap:splash src="res/android/screen/land-mdpi-screen.png" gap:platform="android" gap:qualifier="land-mdpi" />
+	<gap:splash src="res/android/screen/land-hdpi-screen.png" gap:platform="android" gap:qualifier="land-hdpi" />
+	<gap:splash src="res/android/screen/land-xhdpi-screen.png" gap:platform="android" gap:qualifier="land-xhdpi" />
+	<gap:splash src="res/android/screen/land-xxhdpi-screen.png" gap:platform="android" gap:qualifier="land-xxhdpi" /-->
 
 
-	<platform name="android">
-		<icon src="res/icon/android/wajarri-icon2-36dpi.png" gap:platform="android" gap:qualifier="ldpi" density="ldpi" />
-		<icon src="res/icon/android/wajarri-icon2-48dpi.png" gap:platform="android" gap:qualifier="mdpi" density="mdpi" />
-		<icon src="res/icon/android/wajarri-icon2-72dpi.png" gap:platform="android" gap:qualifier="hdpi" density="hdpi" />
-		<icon src="res/icon/android/wajarri-icon2-96dpi.png" gap:platform="android" gap:qualifier="xhdpi" density="xhdpi" />
-		
-		<!-- DUPLICATES USED FOR LOCAL BUILD -->
-		<splash src="res/screen/android/screen-hdpi-portrait.png" />
-		<splash src="res/screen/android/screen-hdpi-portrait.png" density="ldpi" />
-		<splash src="res/screen/android/screen-hdpi-portrait.png" density="mdpi" />
-		<splash src="res/screen/android/screen-hdpi-portrait.png" density="hdpi" />
-		<splash src="res/screen/android/screen-hdpi-portrait.png" density="xhdpi" />
-		<!-- DUPLICATES USED FOR LOCAL BUILD -->
-	</platform>
-
-	<gap:splash src="res/screen/android/screen-hdpi-portrait.png" gap:platform="android" />
-	<gap:splash src="res/screen/android/screen-hdpi-portrait.png" gap:platform="android" gap:qualifier="ldpi" />
-	<gap:splash src="res/screen/android/screen-hdpi-portrait.png" gap:platform="android" gap:qualifier="mdpi" />
-	<gap:splash src="res/screen/android/screen-hdpi-portrait.png" gap:platform="android" gap:qualifier="hdpi" />
-	<gap:splash src="res/screen/android/screen-hdpi-portrait.png" gap:platform="android" gap:qualifier="xhdpi" />
-
-
-	<platform name="ios">
-		<icon src="res/icon/ios/icon-57.png" gap:platform="ios" width="57" height="57" />
-		<icon src="res/icon/ios/icon-72.png" gap:platform="ios" width="72" height="72" />
-		<icon src="res/icon/ios/icon-57-2x.png" gap:platform="ios" width="114" height="114" />
-		<icon src="res/icon/ios/icon-72-2x.png" gap:platform="ios" width="144" height="144" />
-	</platform>
+	<icon src="res/ios/icon/icon-57.png" gap:platform="ios" width="57" height="57" />
+	<icon src="res/ios/icon/icon-72.png" gap:platform="ios" width="72" height="72" />
+	<icon src="res/ios/icon/icon-57-2x.png" gap:platform="ios" width="114" height="114" />
+	<icon src="res/ios/icon/icon-72-2x.png" gap:platform="ios" width="144" height="144" />
 	
-	<gap:splash src="res/screen/ios/screen-iphone-portrait.png" gap:platform="ios" width="320" height="480" />
-	<gap:splash src="res/screen/ios/screen-iphone-portrait-2x.png" gap:platform="ios" width="640" height="960" />
-	<gap:splash src="res/screen/ios/screen-iphone-portrait-568h-2x.png" gap:platform="ios" width="640" height="1136" />
-	<gap:splash src="res/screen/ios/screen-ipad-portrait.png" gap:platform="ios" width="768" height="1024" />
-	<gap:splash src="res/screen/ios/screen-ipad-landscape.png" gap:platform="ios" width="1024" height="768" />
+	<gap:splash src="res/ios/screen/screen-iphone-portrait.png" gap:platform="ios" width="320" height="480" />
+	<gap:splash src="res/ios/screen/screen-iphone-portrait-2x.png" gap:platform="ios" width="640" height="960" />
+	<gap:splash src="res/ios/screen/screen-iphone-portrait-568h-2x.png" gap:platform="ios" width="640" height="1136" />
+	<gap:splash src="res/ios/screen/screen-ipad-portrait.png" gap:platform="ios" width="768" height="1024" />
+	<gap:splash src="res/ios/screen/screen-ipad-portrait-2x.png" gap:platform="ios" width="1536" height="2048" />
+	<!--gap:splash src="res/ios/screen/screen-ipad-landscape.png" gap:platform="ios" width="1024" height="768" />
+	<gap:splash src="res/ios/screen/screen-ipad-landscape-2x.png" gap:platform="ios" width="2048" height="1536" /-->
 	
 	<access origin="*"/>
 

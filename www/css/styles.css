@@ -35,7 +35,8 @@ body {
 	padding: 0;
 	margin: 0;
 	overflow: hidden;
-	background: #FFF center/cover no-repeat fixed url(../images/background.png) !important;
+	background: #000 right bottom no-repeat fixed url(../images/background.png) !important;
+	background-size: auto 100% !important;
 }
 
 .ui-bar-a 
@@ -163,7 +164,7 @@ body {
 	background: rgba(255,255,255,.5);
 	position: absolute;
 	height: 100px;
-	max-width: 500px;
+	/*max-width: 500px;*/
 }
 
 #home .footer .dock-left {
