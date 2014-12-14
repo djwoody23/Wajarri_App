@@ -265,8 +265,7 @@ $(document).ready(function()
 
 		function onDeviceReady()
 		{
-	        if (typeof(window.device) !== 'undefined' &&
-	        	device.platform.toLowerCase() === "ios")
+	        if (device.platform.toLowerCase() === "ios")
 	        {
 	            $("html").css("top", "20px !important");
 	        }
