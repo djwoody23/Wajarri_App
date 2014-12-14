@@ -42,6 +42,8 @@
 	<preference name="StatusBarStyle"             value="lightcontent" />
 
 	<preference name="SplashScreen"               value="splash"/>
+	<!-- Local Phonegap build requires "screen"-->
+	<!--preference name="SplashScreen"               value="screen"/-->
 	<preference name="SplashScreenDelay"          value="30000"/>
 	
 	<!-- Platforms -->

@@ -108,12 +108,16 @@ body {
 	bottom: 0;
 }
 
-.dock {
+.dock, .fixed-dock {
 	position: absolute;
 	top: 0;
 	left: 0;
 	bottom: 0;
 	right: 0;
+}
+
+.fixed-dock {
+	position: fixed;
 }
 
 .center-horizontal {
@@ -422,3 +426,22 @@ body {
 	top: 0px;
 }
 /*End Favourites Page Styles*/
+
+
+#loading
+{
+	z-index: 99999999;
+	background: rgba(0, 0, 0, 0.5);
+}
+
+#loading > .ui-icon-loading
+{
+	margin: auto;
+	width: 64px;
+	height: 64px;
+	/*background-color: #000;*/
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: auto;
+	border-radius: 16px;
+}

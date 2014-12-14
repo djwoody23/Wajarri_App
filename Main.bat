@@ -128,12 +128,22 @@ GOTO :EOF
 
 :MENUITEMPRINT
 SETLOCAL ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION
-FOR %%I IN (%~1) DO (FOR /F "eol=;delims=" %%A IN ("!%%I_TEXT!") DO ECHO.%%~A)
+FOR %%I IN (%~1) DO (
+	FOR /F "eol=;delims=" %%A IN ("!%%I_TEXT!") DO (
+		ECHO.%%~A
+	)
+)
+ENDLOCAL
 GOTO :EOF
 
 :MENUITEMCHECK
 SETLOCAL ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION
-FOR %%I IN (%~1) DO (IF /I "!%%I_COMMAND!"=="%2" (CALL :MENUITEMPRINT %%I & ECHO. & GOTO :%%I))
+FOR %%I IN (%~1) DO (
+	IF /I "!%%I_COMMAND!"=="%2" (
+		ENDLOCAL
+		CALL :MENUITEMPRINT %%I & ECHO. & GOTO :%%I
+	)
+)
 ECHO UNKNOWN COMMAND "%2"
 ENDLOCAL
 GOTO :EOF
@@ -179,7 +189,6 @@ IF NOT EXIST %APK% (
 	SET APK_SIZE=
 	GOTO :EOF
 )
-
 CALL :COMMA %APK%
 
 SET "APK_SED=aapt dump badging %APK% ^| sed -n -e "
@@ -187,6 +196,15 @@ SET APK_PACKAGE_PATTERN="/^package: /s/.*name='\([^']*\)'.*$/\1/p"
 SET APK_ACTIVITY_PATTERN="/^launchable-activity:/s/.*name='\([^']*\)'.*$/\1/p"
 FOR /F %%A IN ('%APK_SED%%APK_PACKAGE_PATTERN%') DO (SET "APK_PACKAGE=%%A")
 FOR /F %%A IN ('%APK_SED%%APK_ACTIVITY_PATTERN%') DO (SET "APK_ACTIVITY=%%A")
+
+SET APK_SED=
+SET APK_PACKAGE_PATTERN=
+SET APK_ACTIVITY_PATTERN=
+
+ECHO Updated APK: %APK%
+ECHO Size: %APK_SIZE%
+ECHO Package: %APK_PACKAGE%
+ECHO Activity: %APK_ACTIVITY%
 GOTO :EOF
 
 :UPDATE_ID
@@ -233,13 +251,13 @@ SETLOCAL
 SET /P DIR=Enter Project Directory: 
 CD %DIR%
 ENDLOCAL
-CALL :UPDATE_APK %APK%
+CALL :UPDATE_APK
 GOTO :EOF
 
 :SETAPK
 ECHO SET APK
 SET /P APK=Drag apk file here: 
-CALL :UPDATE_APK %APK%
+CALL :UPDATE_APK
 GOTO :EOF
 
 
@@ -247,16 +265,17 @@ GOTO :EOF
 CALL :UPDATE_ID
 ECHO COMPRESSING
 IF EXIST %APK_ZIP% ( DEL /S /Q %APK_ZIP% )
-CALL 7z a -tzip %APK_ZIP% -mx9 ^
-config.xml www\config.xml res\ www\ ^
--x^^!res\*\*\*land* ^
--xr^^!*.db
-::-x^^!www\images\dictionary ^
-::-x^^!www\audio
+
+SET "INCLUDE_FILES=config.xml www\config.xml res\ www\"
+SET "EXCLUDE_FILES=-x^^!res\*\*\*land*"
+SET "EXCLUDE_FILES_RECURSIVE=-xr^^!*.db"
+
+CALL 7z a -tzip %APK_ZIP% -mx9 %INCLUDE_FILES% %EXCLUDE_FILES% %EXCLUDE_FILES_RECURSIVE%
+
 ECHO.
 ECHO UPLOADING
-::ECHO CALL pgbuild update %PGB_ID% %APK_ZIP%
-::CALL pgbuild update %PGB_ID% %APK_ZIP%
+ECHO CALL pgbuild update %PGB_ID% %APK_ZIP%
+CALL pgbuild update %PGB_ID% %APK_ZIP%
 ECHO.
 ECHO COMPLETED
 GOTO :EOF
@@ -274,7 +293,7 @@ ECHO.
 CALL pgbuild download %PGB_ID% android
 ECHO.
 ECHO COMPLETED
-CALL :UPDATE_APK %APK%
+CALL :UPDATE_APK
 GOTO :EOF
 
 :BUILDRES
@@ -315,7 +334,7 @@ GOTO :EOF
 ECHO BUILD APK
 CALL phonegap build android --verbose
 COPY "platforms\android\ant-build\CordovaApp-debug.apk" %APK%
-CALL :UPDATE_APK %APK%
+CALL :UPDATE_APK
 GOTO :EOF
 
 

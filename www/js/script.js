@@ -33,110 +33,37 @@ function checkAudio(id)
 	}
 }
 
-var var_collapsible = false;
-
 function updateList(id, info, label)
 {
 	var list = $(id);
 	list.hide();
-	//list.collapsibleset();
 
 	list.empty();
 
-	var ul;
-
-	if (var_collapsible)
+	ul = $('<ul />',
 	{
-		list.attr("data-children", "> div, > div div ul li");
-		list.attr("data-input", id + " > .content input[data-type='search']");
-		list.attr("data-filter", true);
-		list.attr("data-inset", true);
-	}
-	else
-	{
-		//list.attr("data-children", "> ul li");
+		'data-role': 'listview',
+		'data-inset': true,
+		'data-input': id + "-search",
+		'data-filter': true
+	});
+	list.append(ul);
 
-		ul = list.find("ul");
-		if (!ul.length)
-		{
-			ul = $('<ul />',
-			{
-				'data-role': 'listview',
-				'data-inset': true,
-				'data-input': id + "-search",
-				'data-filter': true
-			});
-			list.append(ul);
-		}
+	function make(item)
+	{
+		return '<li class="ui-btn" data-filtertext="' + item.text.toLowerCase() + '" data-id="' + item.id + '">' + label(item) + '</li>';
 	}
 
+	var data = '';
 	for (var i = 0; i < info.length; i++)
 	{
-		var item = info[i];
-
-		var data = $('<li />',
-		{
-			'data-filtertext': item.text.toLowerCase(),
-			'data-id': item.id,
-			'class': "ui-btn"// ui-btn-icon-right ui-icon-carat-r"
-		}).html(label(item));
-
-		if (var_collapsible)
-		{
-			var alpha = item.text.slice(0, 1).toUpperCase();
-			var div = list.find("div[data-group='" + alpha + "']");
-	
-			if (div.length)
-			{
-				ul = div.find("ul");
-			}
-			else
-			{
-				div = $('<div />',
-				{
-					'data-role': 'collapsible',
-					'data-collapsed': true,
-					'data-inset': true,
-					'data-filtertext': alpha.toLowerCase(),
-					'data-collapsed-icon':"carat-d",
-					'data-expanded-icon':"carat-u",
-					'data-group': alpha
-				});
-				var h3 = $('<h3 />').html(alpha);
-				ul = $('<ul />',
-				{
-					'data-role': 'listview',
-					'data-inset': false
-				});
-				div.append(h3);
-				div.append(ul);
-				list.append(div);
-			}
-	
-			var ftext = div.attr('data-filtertext') + ' ' + item.text.toLowerCase();
-			div.attr('data-filtertext', ftext);
-		}
-
-		/*if (i > 100)
-		{
-			data.hide();
-		}*/
-		ul.append(data);
+		data += make(info[i]);
 	}
 
-	//ul.css('height', (ul.children().length * 50).toString() + 'px');
+	ul.html(data);
+	ul.listview();
 
-	//list.collapsibleset();
-	list.find("[data-role='collapsible']").collapsible();
-	list.find("[data-role='listview']").listview();
 	list.show();
-	/*var ul = list.find("ul");
-	ul.empty();
-	ul.append(data);
-
-	ul.listview({
-		autodividers: true
-	}).listview('refresh');*/
 }
 
 //Megalist plugin Script to display list items
@@ -278,9 +205,30 @@ $(document).ready(function()
     var $pages = $("body");
     $pages.pagecontainer({ defaults: true });
 
-    $pages.on("pagecreate pagebeforechange pagechange pagebeforeshow pageshow", ".page", function(event, ui)
+    /*$pages.on("pagecreate pagebeforehide pagehide pagebeforechange pagechange pagebeforeshow pageshow", function(event, ui)
     {
         console.log(event.type + ": " + event.target.id);
+    });*/
+
+    $pages.on("pagecreate", ".page", function(event, ui)
+    {
+        console.log(event.type + ": " + event.target.id);
+    });
+
+    $pages.on("pagebeforechange", function(event, ui)
+    {
+        console.log(event.type + ": " + event.target.id);
+        //if (navigator.splashscreen)
+		//	navigator.splashscreen.show();
+    	$("#loading").show();
+    });
+
+    $pages.on("pagechange", function(event, ui)
+    {
+        console.log(event.type + ": " + event.target.id);
+    	$("#loading").hide();
+    	//if (navigator.splashscreen)
+		//	navigator.splashscreen.hide();
     });
 
     //pagecreate event for each page
@@ -307,6 +255,8 @@ $(document).ready(function()
                 showLoadMsg: false
             });
         }
+
+		$("#loading").hide();
 	}
 
 	if (typeof(window.cordova) !== 'undefined')
