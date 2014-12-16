@@ -35,33 +35,105 @@ function checkAudio(id)
 
 function updateList(id, info, label)
 {
-	var list = $(id);
-	list.hide();
-
-	list.empty();
-
-	ul = $('<ul />',
-	{
-		'data-role': 'listview',
-		'data-inset': true,
-		'data-input': id + "-search",
-		'data-filter': true
-	});
-	list.append(ul);
-
 	function make(item)
 	{
 		return '<li class="ui-btn" data-filtertext="' + item.text.toLowerCase() + '" data-id="' + item.id + '">' + label(item) + '</li>';
 	}
 
-	var data = '';
-	for (var i = 0; i < info.length; i++)
-	{
-		data += make(info[i]);
-	}
+	var list = $(id);
+	list.hide();
 
-	ul.html(data);
-	ul.listview();
+	list.empty();
+
+
+	var collapsible = true;
+	var collapsibleset = false;
+
+	if (collapsible)
+	{
+		list.attr("data-filter", true);
+		list.attr("data-children", "> div, > div div ul li");
+		list.attr("data-input", id + "-search");
+		list.attr("data-inset", true);
+		//list.attr("data-enhanced", true);
+
+		for (var i = 0; i < info.length; i++)
+		{
+			var item = info[i];
+
+			var alpha = item.text.slice(0, 1).toUpperCase();
+			var div = list.find("div[data-group='" + alpha + "']");
+			var ul;
+
+			if (div.length)
+			{
+				ul = div.find("ul");
+			}
+			else
+			{
+				div = $('<div />',
+				{
+					'data-role': 'collapsible',
+					'data-filtertext': alpha.toLowerCase(),
+
+					'data-collapsed': true,
+					'data-inset': true,
+					'data-collapsed-icon':"carat-d",
+					'data-expanded-icon':"carat-u",
+					'data-group': alpha
+				});
+				//div.attr("data-input", id + "-search");
+				//div.attr("data-filter", true);
+				var h3 = $('<h3 />').html(alpha);
+				ul = $('<ul />',
+				{
+					'data-role': 'listview',
+					'data-inset': false
+				});
+				//ul.attr("data-input", id + "-search");
+				//ul.attr("data-filter", true);
+				div.append(h3);
+				div.append(ul);
+				list.append(div);
+			}
+	
+			var ftext = div.attr('data-filtertext') + ' ' + item.text.toLowerCase();
+			div.attr('data-filtertext', ftext);
+
+			ul.append(make(item));
+		}
+
+		list.find("[data-role='collapsible']").collapsible();
+		list.find("[data-role='listview']").listview();
+		if (collapsibleset)
+		{
+			list.attr("data-role", 'collapsible-set');
+			list.collapsibleset();
+		}
+		list.filterable();
+
+		list.show();
+	}
+	else
+	{
+		var ul = $('<ul />',
+		{
+			'data-role': 'listview',
+			'data-inset': true,
+			'data-input': id + "-search",
+			'data-filter': true
+		});
+		list.append(ul);
+
+		var data = '';
+		for (var i = 0; i < info.length; i++)
+		{
+			data += make(info[i]);
+		}
+
+		ul.html(data);
+		ul.listview();
+	}
 
 	list.show();
 }
