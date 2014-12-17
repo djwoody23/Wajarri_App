@@ -59,7 +59,7 @@ var global =
                 dataType: 'json',
                 mimeType: "application/json",
                 async: false,
-                url: "wajarriDic03122014.json",
+                url: "wajarriDic16122014.json",
                 success: this.setData,
                 error: function(err)
                 {

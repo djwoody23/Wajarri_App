@@ -35,6 +35,10 @@ function checkAudio(id)
 
 function updateList(id, info, label)
 {
+	var collapsible = true;
+	var collapsibleset = false;
+
+
 	function make(item)
 	{
 		return '<li class="ui-btn" data-filtertext="' + item.text.toLowerCase() + '" data-id="' + item.id + '">' + label(item) + '</li>';
@@ -44,10 +48,6 @@ function updateList(id, info, label)
 	list.hide();
 
 	list.empty();
-
-
-	var collapsible = true;
-	var collapsibleset = false;
 
 	if (collapsible)
 	{
@@ -339,7 +339,9 @@ $(document).ready(function()
 		{
 	        if (device.platform.toLowerCase() === "ios")
 	        {
-	            $("html").css("top", "20px !important");
+	           	StatusBar.overlaysWebView(false);
+	            StatusBar.styleLightContent();
+	           	StatusBar.backgroundColorByName("black");
 	        }
 
 			onReady();
