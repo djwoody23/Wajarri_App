@@ -4,26 +4,26 @@ function checkAudio(id)
 {
 	if (typeof(Media) !== 'undefined') // FIX: Media UNDEFINED!
 	{
-		console.log("HAS MEDIA");
+		//console.log("HAS MEDIA");
 
 		var audio = $(id)[0];
 		if (!$(id).data("media"))
 		{
 			audio.play = function()
 			{
-				console.log("Playing " + $(this).data("media").src);
+				//console.log("Playing " + $(this).data("media").src);
 				$(this).data("media").play();
 			};
 
 			audio.pause = function()
 			{
-				console.log("Pausing " + $(this).data("media").src);
+				//console.log("Pausing " + $(this).data("media").src);
 				$(this).data("media").pause();
 			};
 
 			/*audio.stop = function()
 			{
-				console.log("Stopping " + $(this).data("media").src);
+				//console.log("Stopping " + $(this).data("media").src);
 				$(this).data("media").stop();
 			};*/
 		}
@@ -46,7 +46,10 @@ function checkAudio(id)
 
 		function onError(error)
 		{
-			console.log("[ERROR] Failed to load/play \"" + path + "\".\n" + JSON.stringify(error));
+			if (error && error.code)
+			{
+				console.log("[ERROR] Failed to load/play \"" + path + "\" (" + error.code + ").");
+			}
 		}
 
 		function onStatus(value)
@@ -54,6 +57,7 @@ function checkAudio(id)
 			console.log("Status update \"" + path + "\". " + JSON.stringify(value));
 		}
 
+		console.log("Audio: \"" + path + "\"");
 		$(id).data("media", new Media(path, undefined, onError));
 	}
 }
