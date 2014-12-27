@@ -13,6 +13,11 @@ function checkAudio(id)
 				$(this).data("media").play();
 			};
 		}
+		else
+		{
+			var media = $(id).data("media");
+			media.stop();
+		}
 
         function getMediaURL(s)
         {
@@ -29,6 +34,7 @@ function checkAudio(id)
 		{
 			console.log("[ERROR] Failed to load/play \"" + path + "\".\n" + JSON.stringify(error));
 		}
+
 		$(id).data("media", new Media(path, undefined, onError));
 	}
 }

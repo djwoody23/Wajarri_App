@@ -171,7 +171,7 @@ body {
 }
 
 #home .footer {
-	margin: 10px auto;
+	margin: 10px auto 0 auto;
 	background: rgba(255,255,255,.5);
 	position: absolute;
 	height: 100px;
