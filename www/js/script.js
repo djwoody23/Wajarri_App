@@ -62,6 +62,11 @@ function updateList(id, info, label)
 			var item = info[i];
 
 			var alpha = item.text.slice(0, 1).toUpperCase();
+			if (alpha.match(/[0-9]/))
+			{
+				alpha = '#';
+			}
+
 			var div = list.find("div[data-group='" + alpha + "']");
 			var ul;
 

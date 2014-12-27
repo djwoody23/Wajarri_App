@@ -80,9 +80,9 @@ body {
     -webkit-box-shadow: none;
 }
 
-.ui-content .ui-listview-inset
-{
-	margin: 0.25em 0;
+.ui-collapsible-inset,
+.ui-collapsible-set {
+    margin: 0px 0px;
 }
 
 /* HELPERS */
