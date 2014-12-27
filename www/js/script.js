@@ -6,22 +6,35 @@ function checkAudio(id)
 	{
 		console.log("HAS MEDIA");
 
+		var audio = $(id)[0];
 		if (!$(id).data("media"))
 		{
-			$(id)[0].play = function()
+			audio.play = function()
 			{
+				console.log("Playing " + $(this).data("media").src);
 				$(this).data("media").play();
 			};
+
+			audio.pause = function()
+			{
+				console.log("Pausing " + $(this).data("media").src);
+				$(this).data("media").pause();
+			};
+
+			/*audio.stop = function()
+			{
+				console.log("Stopping " + $(this).data("media").src);
+				$(this).data("media").stop();
+			};*/
 		}
 		else
 		{
-			var media = $(id).data("media");
-			media.stop();
+			audio.pause();
 		}
 
         function getMediaURL(s)
         {
-            if(device.platform.toLowerCase() === "android")
+            if (device.platform.toLowerCase() === "android")
             {
                 return "/android_asset/www/" + s;
             }
@@ -30,24 +43,35 @@ function checkAudio(id)
 
 		var path = getMediaURL($(id).attr('src'));
 
+
 		function onError(error)
 		{
 			console.log("[ERROR] Failed to load/play \"" + path + "\".\n" + JSON.stringify(error));
+		}
+
+		function onStatus(value)
+		{
+			console.log("Status update \"" + path + "\". " + JSON.stringify(value));
 		}
 
 		$(id).data("media", new Media(path, undefined, onError));
 	}
 }
 
-function updateList(id, info, label)
+function updateList(id, info, label, collapsible)
 {
-	var collapsible = true;
 	var collapsibleset = false;
-
+	collapsible = (collapsible == undefined) ? false : collapsible;
 
 	function make(item)
 	{
-		return '<li class="ui-btn" data-filtertext="' + item.text.toLowerCase() + '" data-id="' + item.id + '">' + label(item) + '</li>';
+		return '<li \
+			class="ui-btn" \
+			data-filtertext="' + item.text.toLowerCase() + '" \
+			data-id="' + item.id +	'" \
+			data-index="' + item.index + '">' +
+				label(item) +
+			'</li>';
 	}
 
 	var list = $(id);
@@ -61,7 +85,6 @@ function updateList(id, info, label)
 		list.attr("data-children", "> div, > div div ul li");
 		list.attr("data-input", id + "-search");
 		list.attr("data-inset", true);
-		//list.attr("data-enhanced", true);
 
 		for (var i = 0; i < info.length; i++)
 		{
@@ -93,16 +116,12 @@ function updateList(id, info, label)
 					'data-expanded-icon':"carat-u",
 					'data-group': alpha
 				});
-				//div.attr("data-input", id + "-search");
-				//div.attr("data-filter", true);
 				var h3 = $('<h3 />').html(alpha);
 				ul = $('<ul />',
 				{
 					'data-role': 'listview',
 					'data-inset': false
 				});
-				//ul.attr("data-input", id + "-search");
-				//ul.attr("data-filter", true);
 				div.append(h3);
 				div.append(ul);
 				list.append(div);
@@ -122,8 +141,6 @@ function updateList(id, info, label)
 			list.collapsibleset();
 		}
 		list.filterable();
-
-		list.show();
 	}
 	else
 	{
@@ -150,15 +167,38 @@ function updateList(id, info, label)
 }
 
 //Megalist plugin Script to display list items
-function loadDictionaryValues(id, info, label, onchange)
+function loadDictionaryValues(id, info, label, collapsible)
 {
 	var list = $(id);
 
 	list.addClass('new-list');
 
-	updateList(id, info, label);
+	updateList(id, info.get(), label, collapsible);
 
-    list.on("click tap", "li", onchange);
+	function onChange(e)
+	{
+		var item = $(e.target).closest("li");
+
+		if ($(e.target).data("remove"))
+		{
+			var index = parseInt(item.data("id"));
+			info.remove(index);
+			favouritesShow();
+		}
+		else
+		{
+			var index = parseInt(item.data("index"));
+			//store the information in the next page's data
+			$("#details-page").data("iterator", info.iterator(index));
+			//change the page # to second page. 
+			//Now the URL in the address bar will read index.html#details-page
+			//where #details-page is the "id" of the second page
+			//we're gonna redirect to that now using changePage() method
+	        $("body").pagecontainer("change", "#details-page");//, { data: { id: index } });
+		}
+	}
+
+    list.on("click tap", "li", onChange);
 }
 
 function dictionaryLabel(item)
@@ -168,86 +208,60 @@ function dictionaryLabel(item)
 
 function favouritesLabel(item)
 {
-	return dictionaryLabel(item) + '<span data-remove="true" class="new-list-remove ui-btn-icon-notext ui-icon-delete">x</span>';
+	return dictionaryLabel(item) +
+		'<span data-remove="true" class="new-list-remove ui-btn-icon-notext ui-icon-delete">x</span>';
 }
 
-function dictionaryOnChange(e)
-{
-   	//$("body").find(".ui-loader").css("display", "block !important");
-	var item = $(e.target).closest("li");
-
-	var child_id = item.data("id");
-	var index = parseInt(child_id);
-
-	//store the information in the next page's data
-	$("#details-page").data("id", index);
-	//change the page # to second page. 
-	//Now the URL in the address bar will read index.html#details-page
-	//where #details-page is the "id" of the second page
-	//we're gonna redirect to that now using changePage() method
-    $("body").pagecontainer("change", "#details-page")//, { data: { id: index } });
-}
-
-function favouritesOnChange(e)
-{
-   	//$("body").find(".ui-loader").css("display", "block !important");
-	var item = $(e.target).closest("li");
-	var target = $(e.target);
-
-	var child_id = item.data("id");
-	var index = parseInt(child_id);
-
-	if (target.data("remove"))
-	{
-		global.favourites.remove(index);
-		favouritesShow();
-	}
-	else
-	{
-		//store the information in the next page's data
-		$("#details-page").data("id", index);
-		//change the page # to second page. 
-		//Now the URL in the address bar will read index.html#details-page
-		//where #details-page is the "id" of the second page
-		//we're gonna redirect to that now using changePage() method
-        $("body").pagecontainer("change", "#details-page");//, { data: { id: index } });
-	}
-}
 
 //English Page Script
 function englishInit()
 {
-	loadDictionaryValues("#eng-list", global.dictionary.english, dictionaryLabel, dictionaryOnChange);
+	loadDictionaryValues("#eng-list", global.dictionary.english, dictionaryLabel, global.settings.collapsible_list);
 }
-//Wajarri Page Script   
+
+//Wajarri Page Script
 function wajarriInit()
 {
-	loadDictionaryValues("#waj-list", global.dictionary.wajarri, dictionaryLabel, dictionaryOnChange);
+	loadDictionaryValues("#waj-list", global.dictionary.wajarri, dictionaryLabel, global.settings.collapsible_list);
 }
+
 
 function favouritesInit()
 {
-	loadDictionaryValues("#fav-list", global.favourites.get(), favouritesLabel, favouritesOnChange);
+	loadDictionaryValues("#fav-list", global.favourites, favouritesLabel);
 }
+
+function favouritesShow()
+{
+	updateList("#fav-list", global.favourites.get(), favouritesLabel);
+}
+
 
 function detailsInit()
 {
-	function nextprevious(diff)
+	function next()
 	{
-		var id = $("#details-page").data("id") + diff;
-		if (id >= 0 && id < global.dictionary.data.length)
+		var iterator = $("#details-page").data("iterator");
+		if (iterator && iterator.next())
 		{
-			$("#details-page").data("id", id);
 			detailsShow();
 		}
 	}
-
-	function next() { nextprevious(1); }
-	function previous() { nextprevious(-1); }
-
+	function previous()
+	{
+		var iterator = $("#details-page").data("iterator");
+		if (iterator && iterator.previous())
+		{
+			detailsShow();
+		}
+	}
 	function addFavourite()
 	{
-		global.favourites.add($("#details-page").data("id"));
+		var iterator = $("#details-page").data("iterator");
+		if (iterator && iterator.current())
+		{
+			global.favourites.add(iterator.current().id);
+		}
 	}
 
 	$("#next").click(next);
@@ -255,27 +269,63 @@ function detailsInit()
 	$("#detail-favourites-add").click(addFavourite);
 }
 
-
-function favouritesShow()
-{
-	updateList("#fav-list", global.favourites.get(), favouritesLabel);
-}
-
 function detailsShow()
 {
-	var id = $("#details-page").data("id");
-	var info = global.dictionary.data[id];
-	if (info)
+	var details = $("#details-page");
+	var iterator = details.data("iterator");
+	if (iterator)
 	{
-		$("#detail-wajarri").html(info.Wajarri);
-		$("#detail-english").html(info.English);
-		$("#detail-description").html(info.description);
-		$("#detail-image").css("background-image", "url(" + "images/dictionary/" + info.image + ")");
-		$("#detail-audio").attr("src", "audio/" + info.sound);
+		var id = iterator.current().id;
+		var info = global.dictionary.data[id];
+		if (info)
+		{
+			details.find("#detail-audio").attr("src", global.directories.audio(info.sound));
+			checkAudio("#detail-audio");
 
-		checkAudio("#detail-audio");
+			details.find("#detail-wajarri").html(info.Wajarri);
+			details.find("#detail-english").html(info.English);
+			details.find("#detail-description").html(info.description);
+			details.find("#detail-image").css("background-image", "url(" + global.directories.image_dictionary(info.image) + ")");
+		}
+		details.find('.ui-btn-active').removeClass('ui-btn-active');
 	}
 }
+
+function detailsHide()
+{
+	$("#detail-audio")[0].pause();
+}
+
+
+var loading =
+{
+	showing: true,
+	id: "#loading",
+	show: function(page_id)
+	{
+		this.showing = true;
+		$(this.id).show();
+		if (page_id)
+	    {
+			//console.log("Loading: " + page_id);
+			setTimeout(function()
+			{
+				$("body").pagecontainer("change", page_id);
+			}, 50);
+		}
+	},
+	hide: function()
+	{
+	    var page_id = $("body").pagecontainer("getActivePage")[0].id;
+	    if (page_id)
+	    {
+		    console.log("Loaded:  #" + page_id);
+		}
+		$(this.id).hide();
+		this.showing = false;
+	}
+};
+
 
 
 
@@ -288,58 +338,52 @@ $(document).ready(function()
     var $pages = $("body");
     $pages.pagecontainer({ defaults: true });
 
-    /*$pages.on("pagecreate pagebeforehide pagehide pagebeforechange pagechange pagebeforeshow pageshow", function(event, ui)
-    {
-        console.log(event.type + ": " + event.target.id);
-    });*/
 
-    $pages.on("pagecreate", ".page", function(event, ui)
+	$pages.on('pagebeforechange', function(e, data)
+	{
+	    var to = data.toPage;
+
+	    if (typeof to === 'string' && !loading.showing)
+	    {
+            e.preventDefault();
+
+	        var u = $.mobile.path.parseUrl(to);
+	        to = u.hash || u.pathname;
+
+        	loading.show(to);
+	    }
+	});
+
+	$pages.on("pagechange", function(e, data)
     {
-        console.log(event.type + ": " + event.target.id);
+    	loading.hide();
     });
 
-    $pages.on("pagebeforechange", function(event, ui)
-    {
-        console.log(event.type + ": " + event.target.id);
-        //if (navigator.splashscreen)
-		//	navigator.splashscreen.show();
-    	$("#loading").show();
-    });
-
-    $pages.on("pagechange", function(event, ui)
-    {
-        console.log(event.type + ": " + event.target.id);
-    	$("#loading").hide();
-    	//if (navigator.splashscreen)
-		//	navigator.splashscreen.hide();
-    });
-
-    //pagecreate event for each page
-    //triggers only once
+    //pagecreate event for each page (triggers only once)
     $pages.on("pagecreate", "#english-page", englishInit);
+
     $pages.on("pagecreate", "#wajarri-page", wajarriInit);
-    $pages.on("pagecreate", "#details-page", detailsInit);
+
     $pages.on("pagecreate", "#fav-page", favouritesInit);
-    //use pagebeforeshow
-    //DONT USE PAGEINIT! 
-    //the reason is you want this to happen every single time
-    //pageinit will happen only once
     $pages.on("pagebeforeshow", "#fav-page", favouritesShow);
+
+    $pages.on("pagecreate", "#details-page", detailsInit);
     $pages.on("pagebeforeshow", "#details-page", detailsShow);
+    $pages.on("pagebeforehide", "#details-page", detailsHide);
 
 	function onReady()
 	{
 		console.log("onReady");
+
         var pages = $(".page");
         for (var i = 0; i < pages.length; ++i)
         {
-            $.mobile.loadPage("#" + pages[i].id,
-            {
-                showLoadMsg: false
-            });
+        	var id = "#" + pages[i].id;
+        	console.log("Initializing: " + id);
+            $.mobile.loadPage(id, { showLoadMsg: false });
         }
 
-		$("#loading").hide();
+    	loading.hide();
 	}
 
 	if (typeof(window.cordova) !== 'undefined')

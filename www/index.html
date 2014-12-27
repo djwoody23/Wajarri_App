@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
+        <meta charset="utf-8" />
 
         <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7" />
         <title>Wajarri Dictionary</title>
@@ -9,19 +9,25 @@
         <link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
         <!-- mobile layout sized appropriately to viewport width and not zoomable -->
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 
         <!--link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.css" /-->
-        <link href="plugins/jquery.mobile-1.4.5.css" rel="stylesheet" type="text/css">
-        <link href="css/styles.css" rel="stylesheet" type="text/css">
+        <link href="plugins/jquery.mobile-1.4.5.css" rel="stylesheet" type="text/css" />
+        <link href="css/styles.css" rel="stylesheet" type="text/css" />
         <!--script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
         <script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script-->
         <script src="plugins/jquery-1.11.1.js"></script>
+        <script>
+            $(document).bind('mobileinit', function()
+            {
+                $.mobile.activeBtnClass = undefined;
+            });
+        </script>
         <script src="plugins/jquery.mobile-1.4.5.js"></script>
 
         <script src="cordova.js"></script>
-        <script src="js/global.js" defer></script>
-        <script src="js/script.js" defer></script>
+        <script src="js/global.js" defer="true"></script>
+        <script src="js/script.js" defer="true"></script>
     </head>
     <body>
         <!--Home page-->
@@ -58,7 +64,7 @@
         <!--Wajarri page -->
         <div data-role="page" id="wajarri-page" class="page">
             <!-- Header -->
-            <div data-role="header" class="pageheader" data-theme="a" data-position="fixed" data-id="myHeader">
+            <div data-role="header" class="pageheader" data-theme="a" data-id="myHeader">
                 <a href="#" data-rel="back" data-role="button">Go back</a>
                 <h1>Wajarri</h1>
             </div>
@@ -87,7 +93,7 @@
         <!--English page -->
         <div data-role="page" id="english-page" class="page">
             <!-- Header -->
-            <div data-role="header" class="pageheader" data-theme="a" data-position="fixed" data-id="myHeader">
+            <div data-role="header" class="pageheader" data-theme="a" data-id="myHeader">
                 <a href="#" data-rel="back" data-role="button">Go back</a>
                 <h1>English</h1>
             </div>
@@ -108,7 +114,7 @@
         <!--Favourites page -->
         <div data-role="page" id="fav-page" class="page">
             <!-- Header -->
-            <div data-role="header" class="pageheader" data-theme="a" data-position="fixed" data-id="myHeader">
+            <div data-role="header" class="pageheader" data-theme="a" data-id="myHeader">
                 <a href="#" data-rel="back" data-role="button">Go back</a>
                 <h1>Favourites</h1>
             </div>
@@ -126,11 +132,11 @@
         </div>
         <!--Details page -->
         <div data-role="page" id="details-page" class="page">
-            <div data-role="header" class="pageheader" data-theme="a" data-position="fixed" data-id="myHeader2">
+            <div data-role="header" class="pageheader" data-theme="a" data-id="myHeader2">
                 <a href="#" data-rel="back" data-role="button">Go back</a>
                 <h1>Description</h1>
                 <!-- The navigation bar -->
-                <nav data-role="navbar" id="nextBackBtns">
+                <nav data-role="navbar" class="dock-bottom">
                     <ul>
                         <li><a href="#" id="prev" >Previous</a></li>
                         <li><a href="#" id="next" >Next</a></li>
@@ -196,7 +202,7 @@
         <!--Info Page -->
         <div data-role="page" id="information-page" class="page">
             <!-- Header -->
-            <div data-role="header" class="pageheader" data-theme="a" data-position="fixed" data-id="myHeader">
+            <div data-role="header" class="pageheader" data-theme="a" data-id="myHeader">
                 <a href="#" data-rel="back" data-role="button">Go back</a>
                 <h1>Wajarri Information</h1>
             </div>

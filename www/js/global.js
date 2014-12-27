@@ -1,4 +1,35 @@
 
+var Iterator = function(values, index)
+{
+    this.values = values || [];
+    this.index = index == undefined ? 0 : index;
+    this.length = this.values.length;
+};
+Iterator.prototype.current = function()
+{
+    return this.values[this.index];
+};
+Iterator.prototype.next = function()
+{
+    if (this.index < this.values.length - 1)
+    {
+        this.index++;
+        return this.current();
+    }
+    return undefined;
+};
+Iterator.prototype.previous = function()
+{
+    if (this.index > 0)
+    {
+        this.index--;
+        return this.current();
+    }
+    return undefined;
+};
+
+
+
 function sortValue(id)
 {
     return function(a, b)
@@ -42,14 +73,95 @@ function insertSort(arr)
     return arr;
 }
 
+
+
 var global =
 {
+    directories:
+    {
+        audio: function(audio) { return "audio/" + audio; },
+        image: function(image) { return "images/" + image; },
+        image_dictionary: function(image) { return this.image("dictionary/" + image); }
+    },
+    settings:
+    {
+        collapsible_list: true
+    },
     dictionary:
     {
         data: [],
-        english: [],
-        wajarri: [],
+        wajarri:
+        {
+            data: [],
 
+            set: function(data)
+            {
+                var values = [];
+
+                for (var i = 0; i < data.length; ++i)
+                {
+                    var inf = data[i];
+                    values.push(
+                    {
+                        id: inf.id,
+                        text: inf.Wajarri
+                    });
+                }
+
+                values.sort(sortText());
+
+                for (var i = 0; i < values.length; ++i)
+                {
+                    values[i].index = i;
+                }
+
+                this.data = values;
+            },
+            get: function()
+            {
+                return this.data;
+            },
+            iterator: function(index)
+            {
+                return new Iterator(this.get(), index);
+            }
+        },
+        english:
+        {
+            data: [],
+
+            set: function(data)
+            {
+                var values = [];
+
+                for (var i = 0; i < data.length; ++i)
+                {
+                    var inf = data[i];
+                    values.push(
+                    {
+                        id: inf.id,
+                        text: inf.English
+                    });
+                }
+
+                values.sort(sortText());
+
+                for (var i = 0; i < values.length; ++i)
+                {
+                    values[i].index = i;
+                }
+
+                this.data = values;
+            },
+            get: function()
+            {
+                return this.data;
+            },
+            iterator: function(index)
+            {
+                return new Iterator(this.get(), index);
+            }
+        },
         init: function()
         {
             //ajax call to Json Database
@@ -60,52 +172,32 @@ var global =
                 mimeType: "application/json",
                 async: false,
                 url: "wajarriDic16122014.json",
-                success: this.setData,
+                success: function(data) { global.dictionary.set(data); },
                 error: function(err)
                 {
                     console.log("Can't Load JSON: " + err);
                 }
             });
         },
-        setData: function(data)
+        set: function(data)
         {
-            console.log("Loaded Dictionary");
-
-            //data = data.data;
-            var waj = [];
-            var eng = [];
-
             for (var i = 0; i < data.length; ++i)
             {
-                var inf = data[i];
-                inf.id = i;
-                waj.push(
-                {
-                    id: inf.id,
-                    text: inf.Wajarri
-                });
-                eng.push(
-                {
-                    id: inf.id,
-                    text: inf.English
-                });
+                data[i].id = i;
             }
 
-            console.log("Sorting Wajarri Started");
-            waj.sort(sortText());
-            console.log("Sorting Wajarri Ended");
-            console.log("Sorting English Started");
-            eng.sort(sortText());
-            console.log("Sorting English Ended");
-
-            global.dictionary.data = data;
-            global.dictionary.wajarri = waj;
-            global.dictionary.english = eng;
+            this.data = data;
+            this.wajarri.set(this.data);
+            this.english.set(this.data);
+            
+            console.log("Loaded Dictionary");
         }
     },
     favourites:
     {
         items: [],
+        data: [],
+
         init: function()
         {
             this.load();
@@ -146,22 +238,38 @@ var global =
             }
             this.save();
         },
-        get: function()
+        update: function(data)
         {
             var values = [];
             var items = this.items;
-            var data = global.dictionary.data;
+
             for (var i = 0; i < items.length; ++i)
             {
                 var inf = data[items[i]];
                 values.push(
                 {
                     id: inf.id,
-                    text: inf.Wajarri
+                    text: inf.Wajarri// + " - " + inf.English
                 });
             }
+
             values.sort(sortText());
-            return values;
+
+            for (var i = 0; i < values.length; ++i)
+            {
+                values[i].index = i;
+            }
+
+            this.data = values;
+        },
+        get: function()
+        {
+            this.update(global.dictionary.data);
+            return this.data;
+        },
+        iterator: function(index)
+        {
+            return new Iterator(this.get(), index);
         }
     },
     init: function()
