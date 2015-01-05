@@ -171,7 +171,7 @@ var global =
                 dataType: 'json',
                 mimeType: "application/json",
                 async: false,
-                url: "wajarriDic16122014.json",
+                url: "wajarriDic22122014.json",
                 success: function(data) { global.dictionary.set(data); },
                 error: function(err)
                 {
