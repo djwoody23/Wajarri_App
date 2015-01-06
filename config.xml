@@ -103,9 +103,9 @@
 	<icon src="res/ios/icon/icon-57-2x.png" gap:platform="ios" width="114" height="114" />
 	<icon src="res/ios/icon/icon-72-2x.png" gap:platform="ios" width="144" height="144" />
 	
-	<gap:splash src="res/ios/screen/screen-iphone-portrait.png" gap:platform="ios" width="320" height="480" />
-	<gap:splash src="res/ios/screen/screen-iphone-portrait-2x.png" gap:platform="ios" width="640" height="960" />
-	<gap:splash src="res/ios/screen/screen-iphone-portrait-568h-2x.png" gap:platform="ios" width="640" height="1136" />
+	<gap:splash src="res/ios/screen/screen-iphone.png" gap:platform="ios" width="320" height="480" />
+	<gap:splash src="res/ios/screen/screen-iphone-2x.png" gap:platform="ios" width="640" height="960" />
+	<gap:splash src="res/ios/screen/screen-iphone-568h-2x.png" gap:platform="ios" width="640" height="1136" />
 	<gap:splash src="res/ios/screen/screen-ipad-portrait.png" gap:platform="ios" width="768" height="1024" />
 	<gap:splash src="res/ios/screen/screen-ipad-portrait-2x.png" gap:platform="ios" width="1536" height="2048" />
 	<!--gap:splash src="res/ios/screen/screen-ipad-landscape.png" gap:platform="ios" width="1024" height="768" />
