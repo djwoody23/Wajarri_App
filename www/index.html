@@ -146,6 +146,7 @@
             <!-- The content area -->
             <div class="content" data-role="content">
                 <div class="content-details">
+
                     <div class="ui-grid-a">
                         <div class="ui-block-a">
                             <div class="ui-bar field">
@@ -157,8 +158,6 @@
                                 null
                             </div>
                         </div>
-                    </div>
-                    <div class="ui-grid-a">
                         <div class="ui-block-a">
                             <div class="ui-bar field">
                                 English
@@ -169,24 +168,23 @@
                                 null
                             </div>
                         </div>
-                    </div>
-                    <div class="ui-grid-a">
                         <div class="ui-block-a">
                             <div class="ui-bar field">
                                 Description
                             </div>
+                            <div id="detail-image"></div>
                         </div>
                         <div class="ui-block-b">
                             <div class="ui-bar value" id="detail-description">
                             </div>
                         </div>
-                        <div id="detail-image"></div>
-                        <div id="playFav">
-                            <audio id="detail-audio" src="" type="audio/mpeg"></audio>
-                            <a href="#" data-role="button" id="play" tabindex="1" onclick='$("#detail-audio")[0].play()'>Play Audio</a>
-                            <!--Add to Favourites -->
-                            <a href="#" data-role="button" id="detail-favourites-add">Add to Favourites</a>
-                        </div>
+                    </div>
+                        
+                    <div id="playFav">
+                        <audio id="detail-audio" src="" type="audio/mpeg"></audio>
+                        <a href="#" data-role="button" id="play" tabindex="1" onclick='$("#detail-audio")[0].play()'>Play Audio</a>
+                        <!--Add to Favourites -->
+                        <a href="#" data-role="button" id="detail-favourites-add">Add to Favourites</a>
                     </div>
                 </div>
             </div>
