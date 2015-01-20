@@ -289,7 +289,7 @@ function detailsShow()
 			details.find("#detail-wajarri").html(info.Wajarri);
 			details.find("#detail-english").html(info.English);
 			details.find("#detail-description").html(info.description);
-			details.find("#detail-image").css("background-image", "url(" + global.directories.image_dictionary(info.image) + ")");
+			details.find("#detail-image").css("background-image", "url(\"" + global.directories.image_dictionary(info.image) + "\")");
 		}
 		details.find('.ui-btn-active').removeClass('ui-btn-active');
 	}

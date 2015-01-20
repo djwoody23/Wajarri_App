@@ -7,24 +7,17 @@ CHCP 437 > NUL
 
 TITLE PhoneGap Helper
 
-SET ADB="%ANDROID_HOME%\platform-tools\adb.exe"
-SET EMULATOR="%ANDROID_HOME%\tools\emulator.exe"
-
-SET PROJECT_NAME=
-SET APK=
-SET APK_ZIP=
-SET APK_PACKAGE=
-SET APK_ACTIVITY=
-SET APK_SIZE=
-SET PGB_ID=
+CALL :UNSET "PROJECT_NAME APK APK_ZIP APK_PACKAGE APK_ACTIVITY APK_SIZE APK_ZIP_SIZE PGB_ID"
 
 CALL :GENERATESEPARATOR _ " " 80
 CALL :GENERATESEPARATOR - "Ä" 80
 CALL :GENERATESEPARATOR # "Û" 80
 CALL :GENERATESEPARATOR @ "±" 80
 
-
+CALL :COPYOVERRIDES
+ECHO.
 CALL :BUILDRES
+CLS
 
 :START
 CALL :MAINMENU_INIT
@@ -48,7 +41,8 @@ CALL :MENUITEMLABEL APK	  			"APK:           !APK!"
 CALL :MENUITEMLABEL APK_ZIP	  		"ZIP:           !APK_ZIP!"
 CALL :MENUITEMLABEL APK_PACKAGE	  	"PACKAGE:       !APK_PACKAGE!"
 CALL :MENUITEMLABEL APK_ACTIVITY	"ACTIVITY:      !APK_ACTIVITY!"
-CALL :MENUITEMLABEL APK_SIZE		"SIZE:          !APK_SIZE!"
+CALL :MENUITEMLABEL APK_SIZE		"APK SIZE:      !APK_SIZE!"
+CALL :MENUITEMLABEL APK_ZIP_SIZE	"ZIP SIZE:      !APK_ZIP_SIZE!"
 CALL :MENUITEMLABEL PGB_ID			"PHONEGAP ID:   !PGB_ID!"
 
 CALL :MENUITEM EMULATOR		E "Start Emulator"
@@ -57,7 +51,7 @@ CALL :MENUITEM LOGERROR		X "Start Log Error                (Useful if APK is cra
 CALL :MENUITEM SETDIR		S "Set Current Dir"
 CALL :MENUITEM SETAPK		A "Set APK"
 CALL :MENUITEM BUILDRES		B "Build Resources                (Builds the splash and icons)"
-CALL :MENUITEM COMPRESS		U "PHONEGAP - Upload              (Zips and Uploads)"
+CALL :MENUITEM UPLOAD		U "PHONEGAP - Upload              (Zips and Uploads)"
 CALL :MENUITEM DOWNLOAD		D "PHONEGAP - Download"
 CALL :MENUITEM INITPLATFORM	7 "LOCAL    - Initialize Platform"
 CALL :MENUITEM BUILDAPK		8 "LOCAL    - Build APK"
@@ -72,7 +66,7 @@ CALL :MENUITEM QUIT			Q "Quit"
 
 CALL :MENUITEM COMMAND		C "Run Command"
 
-SET MAINMENU_LIST="# # _ PROJECT DIRECTORY APK APK_ZIP APK_PACKAGE APK_ACTIVITY APK_SIZE PGB_ID _ - _ SETDIR SETAPK _ - _ EMULATOR LOGAPK LOGERROR _ - _ BUILDRES _ COMPRESS DOWNLOAD _ SERVEAPK _ INITPLATFORM BUILDAPK _ INSTAPK RUNAPK _ - _ COMMAND PROMPT _ GITGUI _ - _ HELP RESTART QUIT _ @ _"
+SET MAINMENU_LIST="# # _ PROJECT DIRECTORY APK APK_ZIP APK_PACKAGE APK_ACTIVITY APK_SIZE APK_ZIP_SIZE PGB_ID _ - _ SETDIR SETAPK _ - _ EMULATOR LOGAPK LOGERROR _ - _ BUILDRES _ UPLOAD DOWNLOAD _ SERVEAPK _ INITPLATFORM BUILDAPK _ INSTAPK RUNAPK _ - _ COMMAND PROMPT _ GITGUI _ - _ HELP RESTART QUIT _ @ _"
 
 
 GOTO :EOF
@@ -165,15 +159,15 @@ SET VAL=
 GOTO :EOF
 
 
+:UNSET
+FOR %%I IN (%~1) DO SET "%%I="
+GOTO :EOF
+
 
 
 
 :UPDATE
-SET PATTERN="/^\s*<name>/s/^\s*<name>\s*\([^<]*\)\s*<\/name>\s*$/\1/p"
-FOR /F "delims=" %%A IN ('sed -n -e %PATTERN% config.xml') DO (
-	CALL :UPDATE_NAME "%%A"
-	GOTO :EOF
-)
+FOR /F "delims=" %%A IN ('sed -n -e "/^\s*<name>/s/^\s*<name>\s*\([^<]*\)\s*<\/name>\s*$/\1/p" config.xml') DO CALL :UPDATE_NAME "%%A"
 GOTO :EOF
 
 :UPDATE_NAME
@@ -188,30 +182,24 @@ GOTO :EOF
 
 
 :UPDATE_APK
-IF NOT EXIST %APK% (
-	SET APK_PACKAGE=
-	SET APK_ACTIVITY=
-	SET APK_SIZE=
-	GOTO :EOF
-)
-
 CALL :COMMA %APK% APK_SIZE
+CALL :COMMA %APK_ZIP% APK_ZIP_SIZE
+
+CALL :UNSET "APK_PACKAGE APK_ACTIVITY"
+
+IF NOT EXIST %APK% GOTO :EOF
 
 SET "APK_SED=aapt dump badging %APK% ^| sed -n -e"
 SET APK_PACKAGE_PATTERN="/^package: /s/.*name='\([^']*\)'.*$/\1/p"
 SET APK_ACTIVITY_PATTERN="/^launchable-activity:/s/.*name='\([^']*\)'.*$/\1/p"
-FOR /F %%A IN ('%APK_SED% %APK_PACKAGE_PATTERN%') DO (SET "APK_PACKAGE=%%A")
-FOR /F %%A IN ('%APK_SED% %APK_ACTIVITY_PATTERN%') DO (SET "APK_ACTIVITY=%%A")
-SET APK_SED=
-SET APK_PACKAGE_PATTERN=
-SET APK_ACTIVITY_PATTERN=
 
-::ECHO.
-::ECHO Updated APK: %APK%
-::ECHO Size: %APK_SIZE%
-::ECHO Package: %APK_PACKAGE%
-::ECHO Activity: %APK_ACTIVITY%
+FOR /F %%A IN ('%APK_SED% %APK_PACKAGE_PATTERN%')  DO SET "APK_PACKAGE=%%A"
+FOR /F %%A IN ('%APK_SED% %APK_ACTIVITY_PATTERN%') DO SET "APK_ACTIVITY=%%A"
+
+CALL :UNSET "APK_SED APK_PACKAGE_PATTERN APK_ACTIVITY_PATTERN"
+
 GOTO :EOF
+
 
 :UPDATE_ID
 IF NOT "%PGB_ID%"=="" GOTO :EOF
@@ -223,13 +211,21 @@ GOTO :EOF
 
 :COMMA
 SET "VALUE=%~z1"
+IF "%VALUE%"=="" (
+	SET "%2="
+	GOTO :COMMAEND
+)
 SET "%2= Bytes"
 :COMMALOOP
 CALL SET "%2=%VALUE:~-3%%%%2%%"
 SET "VALUE=%VALUE:~0,-3%"
-IF "%VALUE%"=="" GOTO :EOF
+IF "%VALUE%"=="" GOTO :COMMAEND
 CALL SET "%2=,%%%2%%"
 GOTO :COMMALOOP
+:COMMAEND
+CALL :UNSET "VALUE"
+GOTO :EOF
+
 
 
 
@@ -243,12 +239,12 @@ GOTO :EOF
 
 :LOGAPK
 ECHO START   LOG APK
-START "Log CordovaLog" %ADB% logcat CordovaLog:D *:S
+START "Log CordovaLog" adb logcat CordovaLog:D *:S
 GOTO :EOF
 
 :LOGERROR
 ECHO START   LOG ERROR
-START "Log Error" %ADB% logcat *:E
+START "Log Error" adb logcat *:E
 GOTO :EOF
 
 :SETDIR
@@ -268,7 +264,6 @@ GOTO :EOF
 
 
 :COMPRESS
-CALL :UPDATE_ID
 IF EXIST %APK_ZIP% ( DEL /S /Q %APK_ZIP% & ECHO. )
 ECHO COMPRESSING
 ECHO.
@@ -277,10 +272,18 @@ ECHO "-xr!" means exclude recursively
 ECHO.
 SETLOCAL
 SET "INCLUDE_FILES=config.xml www\config.xml res\ www\"
-SET "EXCLUDE_FILES=-x^!res\*\*\*land* -xr^!*.db"
+SET "EXCLUDE_FILES=-x^!res\*\*\*land* -xr^!*.db -x^!res\screen.png"
+::SET "EXCLUDE_FILES=%EXCLUDE_FILES% -x^!www\audio\ -x^!www\images\dictionary\"
 ECHO INCLUDING: %INCLUDE_FILES% %EXCLUDE_FILES%
 CALL 7z a -tzip %APK_ZIP% -mx9 %INCLUDE_FILES% %EXCLUDE_FILES% > NUL
 ENDLOCAL
+CALL :UPDATE_APK
+GOTO :EOF
+
+
+:UPLOAD
+CALL :UPDATE_ID
+CALL :COMPRESS
 ECHO.
 ECHO UPLOADING
 ECHO.
@@ -311,16 +314,22 @@ CALL :UPDATE_APK
 GOTO :EOF
 
 
+:COPYOVERRIDES
+ECHO COPYING OVERRIDES
+ECHO.
+CALL XCOPY "Libs overrides\*" "%CURRENT_DRIVE%\Libs\" /S /Y
+GOTO :EOF
+
 :BUILDRES
 ECHO BUILDING RESOURCES
 ECHO.
-CALL XCOPY "Libs overrides\*" "%CURRENT_DRIVE%\Libs\" /S /Y > NUL
 CALL cordova-gen
 GOTO :EOF
 
 
 :INITPLATFORM
 ECHO INITIALIZE PLATFORM
+ECHO.
 
 IF "%CD%"=="%ANDROID_HOME%" (
 	ECHO INCORRECT PROJECT DIR
@@ -332,17 +341,12 @@ IF EXIST "plugins\" ( RD /S /Q "plugins\" )
 
 SETLOCAL
 SET PATTERN="/^\s*<gap:plugin /s/.*name=['""]\([^'""]*\)['""].*$/\1/gp"
-FOR /F %%A IN ('sed -n -e %PATTERN% config.xml') DO (
-	ECHO.------------------------------------------------------------------------
-	ECHO INSTALLING: %%A
-	ECHO.------------------------------------------------------------------------
-	CALL phonegap plugin add %%A
-)
+FOR /F %%A IN ('sed -n -e %PATTERN% config.xml') DO ECHO DOWNLOADING: %%A & CALL phonegap plugin add %%A > NUL
 ENDLOCAL
 
-ECHO.------------------------------------------------------------------------
+ECHO.
 ECHO ADDING ANDROID PLATFORM
-ECHO.------------------------------------------------------------------------
+ECHO.
 CALL phonegap platform add android
 
 GOTO :EOF
@@ -362,10 +366,10 @@ GOTO :EOF
 
 :INSTAPK
 ECHO UNINSTALL APK
-CALL %ADB% uninstall %APK_PACKAGE%
+CALL adb uninstall %APK_PACKAGE%
 ECHO.
 ECHO INSTALL APK
-CALL %ADB% install -r %APK%
+CALL adb install -r %APK%
 GOTO :EOF
 
 
@@ -373,7 +377,7 @@ GOTO :EOF
 ECHO RUN APK
 ECHO PACKAGE: %APK_PACKAGE%/%APK_ACTIVITY%
 ECHO.
-CALL %ADB% shell am start -S -n %APK_PACKAGE%/%APK_ACTIVITY%
+CALL adb shell am start -S -n %APK_PACKAGE%/%APK_ACTIVITY%
 GOTO :EOF
 
 

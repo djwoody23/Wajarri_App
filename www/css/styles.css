@@ -172,6 +172,11 @@ body {
 	margin-right: auto;
 }
 
+img.only-shrink {
+	max-width: 100%;
+	max-height: 100%;
+}
+
 /* HELPERS END */
 
 
@@ -181,6 +186,7 @@ body {
 	min-height: 0 !important;
 	width: 100% !important;
 	height: 100% !important;
+	text-shadow: none;
 }
 
 .pageheader {
@@ -190,17 +196,19 @@ body {
 }
 
 .pagefooter {
-    max-width: 100%;
     position: absolute;
     bottom: 0px;
-    width: 100%;
-	max-height: 75px;
+	left: 0;
+	right: 0;
+
+	background: rgb(246, 246, 246);
+	border-top: 1px solid #f6f6f6;
 }
 
 .content {
 	position: absolute;
 	top: 50px;
-	bottom: 56px;
+	bottom: 58px;
 	left: 0;
 	right: 0;
 	padding: 0;
@@ -269,14 +277,24 @@ body {
 /*Home page styling*/
 
 #home {
-	text-shadow: none;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 
 #home .content
 {
+	overflow: hidden;
+	position: relative;
 	top: 0px;
 	bottom: 0px;
+	right: 0;
+	left: 0;
 	text-align: center;
+	min-height: 100%;
+}
+
+#home .homeList {
+	padding-bottom: 110px;
 }
 
 #home .homeList a {
@@ -294,17 +312,9 @@ body {
 	width: auto;
 }
 
-#home img {
-	max-width: 100%;
-	max-height: 100%;
-	margin-left: auto;
-	margin-right: auto;
-}
-
 #home .footer {
 	margin: 10px auto 0 auto;
 	background: rgba(255,255,255,.5);
-	position: absolute;
 	height: 100px;
 	/*max-width: 500px;*/
 }
@@ -321,6 +331,10 @@ body {
 	padding: 0px 10px;
 	line-height: 25px;
 	font-size: 15px;
+}
+
+#home .footer .dock-top > img {
+	height: 50px;
 }
 
 /*End Home page styling*/
@@ -340,9 +354,6 @@ body {
 #details-page > .content {
 	top: 78px;
 	overflow-y: auto;
-}
-
-#details-page > .content > .content-details {
 }
 
 #detail-image
@@ -371,30 +382,24 @@ body {
 	color: #FFF !important;
 	text-shadow: none !important;
 	background: rgba(0,0,0,.3) !important;
-}
-
-#information-page .ui-block-b p {
-	width  : 95%;
-    height : auto;
-	margin-right: 5px;
-	margin-left: 5px;
-	color: rgba(255, 255, 255, 1);
-}
-
-#information-page .ui-grid-a {
-	top: 0px;
-	bottom: 75px;
-	overflow-y: auto;
 	text-align: center;
 	font-family: "Adobe Garamond Pro Bold", "Adobe Garamond Pro", "BankGothic Md BT", "BankGothic Lt BT";
-	font-weight: bold;
+	/*font-weight: bold;*/
 }
 
-#information-page .ui-grid-a img {
+#information-page .ui-grid-b img {
     width  : 100%;
     height : auto;
 	padding-right: 10px;
 	padding-top: 10px;
+}
+
+#information-page .ui-block-bc p {
+	width  : 95%;
+	height : auto;
+	margin-right: 5px;
+	margin-left: 5px;
+	color: rgba(255, 255, 255, 1);
 }
 /*End Information Page Styles*/
 
@@ -421,4 +426,23 @@ body {
 	background-position: center;
 	background-size: auto;
 	border-radius: 16px;
+}
+
+html ::-webkit-scrollbar
+{
+	width: 5px;
+	height: 5px;
+}
+html ::-webkit-scrollbar-track
+{
+	border-radius: 10px;
+}
+html ::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background: rgb(169,169,169);
+}
+html ::-webkit-scrollbar-thumb:window-inactive
+{
+	background: rgb(128,128,128);
 }

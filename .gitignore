@@ -1,4 +1,9 @@
 *.apk
 *.db
+*.zip
 /platforms
 /plugins
+/res/android
+/res/ios
+/originals
+/.cordova
