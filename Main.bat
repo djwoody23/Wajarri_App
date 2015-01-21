@@ -7,7 +7,7 @@ CHCP 437 > NUL
 
 TITLE PhoneGap Helper
 
-CALL :UNSET "PROJECT_NAME APK APK_ZIP APK_PACKAGE APK_ACTIVITY APK_SIZE APK_ZIP_SIZE PGB_ID"
+CALL :UNSET "PROJECT_NAME APK APK_ZIP APK_PACKAGE APK_ACTIVITY APK_SIZE APK_ZIP_SIZE APK_MODE PGB_ID"
 
 CALL :GENERATESEPARATOR _ " " 80
 CALL :GENERATESEPARATOR - "Ä" 80
@@ -21,7 +21,7 @@ CLS
 
 :START
 CALL :MAINMENU_INIT
-CALL :UPDATE
+CALL :INIT
 GOTO :MAINMENU
 
 
@@ -36,6 +36,7 @@ GOTO :MAINMENU
 :MAINMENU_INIT
 
 CALL :MENUITEMLABEL PROJECT	  		"PROJECT:       !PROJECT_NAME!"
+CALL :MENUITEMLABEL APK_MODE	  	"MODE:          !APK_MODE!"
 CALL :MENUITEMLABEL DIRECTORY		"DIRECTORY:     "!__CD__!""
 CALL :MENUITEMLABEL APK	  			"APK:           !APK!"
 CALL :MENUITEMLABEL APK_ZIP	  		"ZIP:           !APK_ZIP!"
@@ -50,6 +51,7 @@ CALL :MENUITEM LOGAPK		L "Start Log APK"
 CALL :MENUITEM LOGERROR		X "Start Log Error                (Useful if APK is crashing)"
 CALL :MENUITEM SETDIR		S "Set Current Dir"
 CALL :MENUITEM SETAPK		A "Set APK"
+CALL :MENUITEM SETMODE		M "Set Mode                       (Debug/Release)"
 CALL :MENUITEM BUILDRES		B "Build Resources                (Builds the splash and icons)"
 CALL :MENUITEM UPLOAD		U "PHONEGAP - Upload              (Zips and Uploads)"
 CALL :MENUITEM DOWNLOAD		D "PHONEGAP - Download"
@@ -66,7 +68,7 @@ CALL :MENUITEM QUIT			Q "Quit"
 
 CALL :MENUITEM COMMAND		C "Run Command"
 
-SET MAINMENU_LIST="# # _ PROJECT DIRECTORY APK APK_ZIP APK_PACKAGE APK_ACTIVITY APK_SIZE APK_ZIP_SIZE PGB_ID _ - _ SETDIR SETAPK _ - _ EMULATOR LOGAPK LOGERROR _ - _ BUILDRES _ UPLOAD DOWNLOAD _ SERVEAPK _ INITPLATFORM BUILDAPK _ INSTAPK RUNAPK _ - _ COMMAND PROMPT _ GITGUI _ - _ HELP RESTART QUIT _ @ _"
+SET MAINMENU_LIST="# # _ PROJECT APK_PACKAGE APK_ACTIVITY PGB_ID APK_MODE _ DIRECTORY APK APK_ZIP _ APK_SIZE APK_ZIP_SIZE _ - _ SETDIR SETAPK SETMODE _ - _ EMULATOR LOGAPK LOGERROR _ - _ BUILDRES _ UPLOAD DOWNLOAD _ SERVEAPK _ INITPLATFORM BUILDAPK _ INSTAPK RUNAPK _ - _ COMMAND PROMPT _ GITGUI _ - _ HELP RESTART QUIT _ @ _"
 
 
 GOTO :EOF
@@ -164,17 +166,27 @@ FOR %%I IN (%~1) DO SET "%%I="
 GOTO :EOF
 
 
+:INIT
+SET "APK_MODE=release"
+FOR /F "delims=" %%A IN ('sed -n -e "/^\s*<name>/s/^\s*<name>\s*\([^<]*\)\s*<\/name>\s*$/\1/p" config.xml') DO (
+	SET "PROJECT_NAME=%%A"
+	CALL :UPDATE_NAME
+)
+GOTO :EOF
 
 
-:UPDATE
-FOR /F "delims=" %%A IN ('sed -n -e "/^\s*<name>/s/^\s*<name>\s*\([^<]*\)\s*<\/name>\s*$/\1/p" config.xml') DO CALL :UPDATE_NAME "%%A"
+:SETMODE
+ECHO (D) Debug
+ECHO (R) Release
+CHOICE /C DR /N /M "Input: "
+IF %ERRORLEVEL%==1 ( SET "APK_MODE=debug" ) ELSE ( SET "APK_MODE=release" )
+CALL :UPDATE_NAME
 GOTO :EOF
 
 :UPDATE_NAME
-SET "PROJECT_NAME=%~1"
 SET "APK=%__CD__%%PROJECT_NAME: =%"
 SET APK_ZIP="%APK%.zip"
-SET APK="%APK%-debug.apk"
+SET APK="%APK%-%APK_MODE%.apk"
 
 CALL :UPDATE_APK
 CALL :UPDATE_ID
@@ -358,7 +370,7 @@ GOTO :EOF
 
 :BUILDAPK
 ECHO BUILD APK
-CALL phonegap build android --verbose
+CALL phonegap build android --%APK_MODE% --verbose
 COPY "platforms\android\ant-build\CordovaApp-debug.apk" %APK%
 CALL :UPDATE_APK
 GOTO :EOF
@@ -403,8 +415,9 @@ GOTO :EOF
 
 
 :HELP
-ECHO NOTE: Can enter multiple values when prefixing with '-' (i.e. -890)
+ECHO Make sure to change the mode of the apk to match that on phonegap build.
 ECHO.
+ECHO Can enter multiple values when prefixing with '-' (i.e. -890)
 ECHO EXAMPLE: -BUD90 (Builds resources, uploads, downloads, installs and runs on device)
 GOTO :EOF
 
