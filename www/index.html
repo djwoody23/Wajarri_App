@@ -13,8 +13,31 @@
         <link href="plugins/jquery.mobile-1.4.5.min.css" rel="stylesheet" type="text/css" />
         <link href="css/styles.css" rel="stylesheet" type="text/css" />
 
+        <!-- FIX FOR INTERNET EXPLORER -->
+        <!--[if lte IE 8]>
+            <style>
+                .page
+                {
+                    background-color: #000 !important;
+                }
+            </style>
+        <![endif]-->
+
+        <!-- FIX FOR INTERNET EXPLORER -->
+        <script>
+            if (typeof console == "undefined")
+            {
+                this.console = { log: function (msg) { /*alert(msg);*/ } };
+            }
+        </script>
+
         <script src="plugins/jquery-1.11.1.min.js"></script>
-        <script> $(document).bind('mobileinit', function() { $.mobile.activeBtnClass = undefined; }); </script>
+
+        <!-- FIX FOR BUTTON HIGHLIGHTING -->
+        <script>
+            $(document).bind('mobileinit', function() { $.mobile.activeBtnClass = undefined; });
+        </script>
+
         <script src="plugins/jquery.mobile-1.4.5.min.js"></script>
 
         <script src="cordova.js"></script>

@@ -73,6 +73,50 @@ function insertSort(arr)
     return arr;
 }
 
+var browser = 
+{
+    init: function () 
+    {
+        this.id = this.searchString(navigator.userAgent) || "Other";
+        this.version = this.searchVersion(navigator.userAgent) || this.searchVersion(navigator.appVersion) || "Unknown";
+        this.name = this.browserNames[this.id];
+        this.text = this.name + ' ' + this.version;
+    },
+
+    searchString: function (data) 
+    {
+        for (var key in this.browserNames)
+        {
+            if (data.indexOf(key) != -1)
+            {
+                return key;
+            }
+        }
+        return undefined;
+    },
+
+    searchVersion: function (data)
+    {
+        var index = data.indexOf(this.id);
+        if (index != -1)
+        {
+            return parseFloat(data.substring(index + this.id.length + 1));
+        }
+        return undefined;
+    },
+
+    browserNames:
+    {
+        "Chrome":   "Chrome",
+        "MSIE":     "Internet Explorer",
+        "Firefox":  "Firefox",
+        "Safari":   "Safari",
+        "Opera":    "Opera",
+        "Other":    "Other"
+    }
+};
+browser.init();
+
 
 
 var global =
@@ -272,8 +316,36 @@ var global =
             return new Iterator(this.get(), index);
         }
     },
+    warning:
+    {
+        warning_html:
+            '<div class="warning">' +
+                '<span class="warning_text">Warning: Your browser (<span></span>) is unsupported. Upgrade! <a href="http://www.microsoft.com/en-au/download/internet-explorer-9-details.aspx">Link</a></span>' +
+                '<span class="warning_x" onclick="global.warning.hide()">x</span>' +
+            '</div>',
+        show: function()
+        {
+            $('.warning').css('visibility', 'visible');
+            $('body').css('top', $('.warning').height() + 'px');
+        },
+        hide: function()
+        {
+            $('.warning').css('visibility', 'hidden');
+            $('body').css('top', '0');
+        },
+        init: function()
+        {
+            if (browser.id == 'MSIE' && browser.version < 9)
+            {
+                $('body').append(this.warning_html);
+                $('.warning_text').find("span").html(browser.text);
+                this.show();
+            }
+        }
+    },
     init: function()
     {
+        this.warning.init();
         this.dictionary.init();
         this.favourites.init();
     }

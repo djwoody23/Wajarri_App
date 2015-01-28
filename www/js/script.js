@@ -1,12 +1,18 @@
 
 
-function checkAudio(id)
+function checkAudio(id, src)
 {
+	var audio = $(id)[0];
+
+	if (src)
+	{
+		$("#detail-audio").attr("src", src);
+	}
+
 	if (typeof(Media) !== 'undefined') // FIX: Media UNDEFINED!
 	{
 		//console.log("HAS MEDIA");
 
-		var audio = $(id)[0];
 		if (!$(id).data("media"))
 		{
 			audio.play = function()
@@ -60,6 +66,19 @@ function checkAudio(id)
 		console.log("Audio: \"" + path + "\"");
 		$(id).data("media", new Media(path, undefined, onError));
 	}
+	else
+	{
+		if (typeof(audio.play) == 'undefined')
+		{
+			audio.play = function () { alert("Browser cannot play audio!"); };
+		}
+		if (typeof(audio.pause) == 'undefined')
+		{
+			audio.pause = function () {};
+		}
+	}
+
+	return audio;
 }
 
 function updateList(id, info, label, collapsible)
@@ -283,8 +302,7 @@ function detailsShow()
 		var info = global.dictionary.data[id];
 		if (info)
 		{
-			details.find("#detail-audio").attr("src", global.directories.audio(info.sound));
-			checkAudio("#detail-audio");
+			checkAudio("#detail-audio", global.directories.audio(info.sound));
 
 			details.find("#detail-wajarri").html(info.Wajarri);
 			details.find("#detail-english").html(info.English);
@@ -297,7 +315,7 @@ function detailsShow()
 
 function detailsHide()
 {
-	$("#detail-audio")[0].pause();
+	checkAudio("#detail-audio").pause();
 }
 
 

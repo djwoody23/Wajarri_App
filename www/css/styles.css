@@ -42,8 +42,12 @@ body {
 	padding: 0;
 	margin: 0;
 	overflow: hidden;
-	background: #000 right bottom no-repeat fixed url(../images/background.png) !important;
+	background-image: url(../images/background.png) !important;
+	background-attachment: fixed !important;
+	background-repeat: no-repeat !important;
 	background-size: auto 100% !important;
+	background-position: right bottom !important;
+	background-color: #000 !important;
 }
 
 
@@ -382,6 +386,9 @@ img.only-shrink {
 	color: #FFF !important;
 	text-shadow: none !important;
 	background: rgba(0,0,0,.3) !important;
+}
+
+#information-page .content {
 	text-align: center;
 	font-family: "Adobe Garamond Pro Bold", "Adobe Garamond Pro", "BankGothic Md BT", "BankGothic Lt BT";
 	/*font-weight: bold;*/
@@ -445,4 +452,53 @@ html ::-webkit-scrollbar-thumb
 html ::-webkit-scrollbar-thumb:window-inactive
 {
 	background: rgb(128,128,128);
+}
+
+
+
+div.warning
+{
+	position: fixed;
+
+	top: 0;
+	bottom: auto;
+	left: 0;
+	right: 0;
+	
+	height: 30px;
+	line-height: 28px;
+	
+	font-weight: bold;
+	
+	border: 1px solid black;
+	
+	background-color: #FFFFDE;
+	
+	cursor: default;
+	
+	z-index: 1024;
+}
+
+div.warning:hover
+{
+	background-color: #E6E6C8;
+}
+
+div.warning > span.warning_text
+{
+	padding: 0px 10px;
+	float: left;
+}
+
+div.warning > span.warning_x
+{
+	padding: 0px 10px 0px 10px;
+	float: right;
+	cursor: pointer;
+	border-left: 1px solid #CCCCCC;
+}
+
+div.warning > span.warning_x:hover
+{
+	background-color: #DFDFA6;
 }
