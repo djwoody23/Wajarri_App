@@ -390,8 +390,8 @@ img.only-shrink {
 
 #information-page .content {
 	text-align: center;
-	font-family: "Adobe Garamond Pro Bold", "Adobe Garamond Pro", "BankGothic Md BT", "BankGothic Lt BT";
-	/*font-weight: bold;*/
+	/*font-family: "Adobe Garamond Pro Bold", "Adobe Garamond Pro", "BankGothic Md BT", "BankGothic Lt BT";
+	font-weight: bold;*/
 }
 
 #information-page .ui-grid-b img {
