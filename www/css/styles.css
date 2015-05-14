@@ -275,6 +275,17 @@ img.only-shrink {
 	margin: auto;
 }
 
+.cycle-slideshow-container
+{
+	width: 100%;
+}
+
+.cycle-slideshow
+{
+	width: 240px;
+	margin: auto auto;
+}
+
 /* CLASSES END */
 
 

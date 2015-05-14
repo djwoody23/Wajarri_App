@@ -12,11 +12,6 @@
 
         <link href="plugins/jquery.mobile-1.4.5.min.css" rel="stylesheet" type="text/css" />
         <link href="css/styles.css" rel="stylesheet" type="text/css" />
-        
-        <!-- Start WOWSlider.com HEAD section -->
-        <link rel="stylesheet" type="text/css" href="engine1/style.css" />
-        <script type="text/javascript" src="engine1/jquery.js"></script>
-        <!-- End WOWSlider.com HEAD section -->
 
         <!-- FIX FOR INTERNET EXPLORER -->
         <!--[if lte IE 8]>
@@ -44,6 +39,7 @@
         </script>
 
         <script src="plugins/jquery.mobile-1.4.5.min.js"></script>
+        <script src="plugins/jquery.cycle2.js"></script>
 
         <script src="cordova.js"></script>
         <script src="js/global.js" defer="true"></script>
@@ -233,35 +229,37 @@
                 <p>
                     The Wajarri Dictionary Hard Copy is available for purchase from our website <a href="http://www.bundiyarra.org.au">www.bundiyarra.org.au</a>
                 </p>
-        <!-- Start WOWSlider.com BODY section -->
-<div id="wowslider-container1">
-<div class="ws_images"><ul>
-		<li><img src="data1/images/dsc_0282.jpg" alt="DSC_0282" title="DSC_0282" id="wows1_0" class="only-shrink" /></li>
-		<li><img src="data1/images/dsc_0289.jpg" alt="DSC_0289" title="DSC_0289" id="wows1_1" class="only-shrink" /></li>
-		<li><img src="data1/images/dsc_0290.jpg" alt="DSC_0290" title="DSC_0290" id="wows1_2" class="only-shrink" /></li>
-		<li><img src="data1/images/dsc_0328.jpg" alt="DSC_0328" title="DSC_0328" id="wows1_3" class="only-shrink" /></li>
-		<li><img src="data1/images/dsc_0336_1.jpg" alt="DSC_0336_1" title="DSC_0336_1" id="wows1_4" class="only-shrink" /></li>
-		<li><img src="data1/images/dsc_0009.jpg" alt="DSC_0009" title="DSC_0009" id="wows1_5" class="only-shrink" /></li>
-		<li><img src="data1/images/dsc_0034_2.jpg" alt="DSC_0034_2" title="DSC_0034_2" id="wows1_6" class="only-shrink" /></li>
-		<li><img src="data1/images/dsc_0040.jpg" alt="DSC_0040" title="DSC_0040" id="wows1_7" class="only-shrink" /></li>
-		<li><img src="data1/images/dsc_0045.jpg" alt="DSC_0045" title="DSC_0045" id="wows1_8" class="only-shrink" /></li>
-		<li><img src="data1/images/dsc_0181.jpg" alt="DSC_0181" title="DSC_0181" id="wows1_9" class="only-shrink" /></li>
-		<li><img src="data1/images/dsc_0182.jpg" alt="DSC_0182" title="DSC_0182" id="wows1_10" class="only-shrink" /></li>
-		<li><img src="data1/images/dsc_0185.jpg" alt="DSC_0185" title="DSC_0185" id="wows1_11" class="only-shrink" /></li>
-		<li><img src="data1/images/dsc_0187.jpg" alt="DSC_0187" title="DSC_0187" id="wows1_12" class="only-shrink" /></li>
-		<li><img src="data1/images/dsc_0196.jpg" alt="DSC_0196" title="DSC_0196" id="wows1_13" class="only-shrink" /></li>
-		<li><img src="data1/images/dsc_0202.jpg" alt="DSC_0202" title="DSC_0202" id="wows1_14" class="only-shrink" /></li>
-	</ul></div>
+				<div class="cycle-slideshow-container">
+					<div class='cycle-slideshow'
+						data-cycle-fx='fade'
+						data-cycle-random=true
+						data-cycle-sync=true
+						data-cycle-loader=true
+						data-cycle-swipe=true
+						data-cycle-slides='>img'>
 
-<div class="ws_shadow"></div>
-</div>	
-<script type="text/javascript" src="engine1/wowslider.js"></script>
-<script type="text/javascript" src="engine1/script.js"></script>
-<!-- End WOWSlider.com BODY section -->
+						<img src="images/cycle/dsc_0282.jpg" alt="DSC_0282" title="DSC_0282" id="wows1_0" class="only-shrink" />
+						<img src="images/cycle/dsc_0289.jpg" alt="DSC_0289" title="DSC_0289" id="wows1_1" class="only-shrink" />
+						<img src="images/cycle/dsc_0290.jpg" alt="DSC_0290" title="DSC_0290" id="wows1_2" class="only-shrink" />
+						<img src="images/cycle/dsc_0328.jpg" alt="DSC_0328" title="DSC_0328" id="wows1_3" class="only-shrink" />
+						<img src="images/cycle/dsc_0336_1.jpg" alt="DSC_0336_1" title="DSC_0336_1" id="wows1_4" class="only-shrink" />
+						<img src="images/cycle/dsc_0009.jpg" alt="DSC_0009" title="DSC_0009" id="wows1_5" class="only-shrink" />
+						<img src="images/cycle/dsc_0034_2.jpg" alt="DSC_0034_2" title="DSC_0034_2" id="wows1_6" class="only-shrink" />
+						<img src="images/cycle/dsc_0040.jpg" alt="DSC_0040" title="DSC_0040" id="wows1_7" class="only-shrink" />
+						<img src="images/cycle/dsc_0045.jpg" alt="DSC_0045" title="DSC_0045" id="wows1_8" class="only-shrink" />
+						<img src="images/cycle/dsc_0181.jpg" alt="DSC_0181" title="DSC_0181" id="wows1_9" class="only-shrink" />
+						<img src="images/cycle/dsc_0182.jpg" alt="DSC_0182" title="DSC_0182" id="wows1_10" class="only-shrink" />
+						<img src="images/cycle/dsc_0185.jpg" alt="DSC_0185" title="DSC_0185" id="wows1_11" class="only-shrink" />
+						<img src="images/cycle/dsc_0187.jpg" alt="DSC_0187" title="DSC_0187" id="wows1_12" class="only-shrink" />
+						<img src="images/cycle/dsc_0196.jpg" alt="DSC_0196" title="DSC_0196" id="wows1_13" class="only-shrink" />
+						<img src="images/cycle/dsc_0202.jpg" alt="DSC_0202" title="DSC_0202" id="wows1_14" class="only-shrink" />
+					</div>
+				</div>
                 <h2>Dedication</h2> 
-                <p>To Yamaljinggu, and to the memories of Alya and Ijida, unwavering long-serving contributors to this record, and to all Wajarri speakers named in the Wajarri Dictionary, and other contributors whose names may not be there who purposely left this legacy for their children and grandchildren.<br><br>  
-With deepest respect and gratitude to those people, the Wajarri who shared their words hence their world, thank you.
-</p>
+                <p>
+                    To Yamaljinggu, and to the memories of Alya and Ijida, unwavering long-serving contributors to this record, and to all Wajarri speakers named in the Wajarri Dictionary, and other contributors whose names may not be there who purposely left this legacy for their children and grandchildren.<br><br>
+                    With deepest respect and gratitude to those people, the Wajarri who shared their words hence their world, thank you.
+                </p>
         </div>
             <!-- The footer navigation -->
             <nav data-role="navbar" data-id="myfooter" class="pagefooter">
