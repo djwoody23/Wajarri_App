@@ -148,7 +148,7 @@ var global =
                     values.push(
                     {
                         id: inf.id,
-                        text: inf.Wajarri
+                        text: inf.Wajarri || ""
                     });
                 }
 
@@ -184,7 +184,7 @@ var global =
                     values.push(
                     {
                         id: inf.id,
-                        text: inf.English
+                        text: inf.English || ""
                     });
                 }
 
@@ -215,7 +215,7 @@ var global =
                 dataType: 'json',
                 mimeType: "application/json",
                 async: false,
-                url: "wajarriDic06012015.json",
+                url: "wajarriDic19052015.json",
                 success: function(data) { global.dictionary.set(data); },
                 error: function(err)
                 {
