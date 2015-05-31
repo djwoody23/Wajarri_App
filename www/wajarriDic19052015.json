@@ -170,7 +170,7 @@
     {
         "Wajarri": "minga", 
         "English": "ant", 
-        "description": "ant, ants; the township of Mingenew is said to get its name from minganyuwa \u2011 'having ants'", 
+        "description": "ant, ants; the township of Mingenew is said to get its name from minganyuwa 'having ants'", 
         "sound": "Track44.mp3", 
         "image": "Minga_(ants)_page93.png"
     }, 
@@ -338,7 +338,7 @@
     {
         "Wajarri": "maraji", 
         "English": "aunt", 
-        "description": "aunt (mother's sister, father's sister). For many Wajarri the term for aunt (mother's sister) is the same as for mother \u2011 'yagu' \u2011 as the mother and her sisters are seen to have the same parenting role and responsibilities", 
+        "description": "aunt (mother's sister, father's sister). For many Wajarri the term for aunt (mother's sister) is the same as for mother 'yagu' as the mother and her sisters are seen to have the same parenting role and responsibilities", 
         "sound": "Track69.mp3", 
         "image": "logo.png"
     }, 
@@ -2513,7 +2513,7 @@
         "image": "logo.png"
     }, 
     {
-        "Wajarri": "burda-burdanmanha", 
+        "Wajarri": "burda burdanmanha", 
         "English": "copying", 
         "description": "copying", 
         "sound": "Track387.mp3", 
@@ -2627,7 +2627,7 @@
     {
         "Wajarri": "murrgarn", 
         "English": "country, very dry", 
-        "description": "very dry; very dry country; used when it has been dry for a very long time \u2011 nearly finished", 
+        "description": "very dry; very dry country; used when it has been dry for a very long time nearly finished", 
         "sound": "Track400.mp3", 
         "image": "logo.png"
     }, 
@@ -2991,13 +2991,6 @@
     {
         "Wajarri": "gurlga bunthu", 
         "English": "deaf", 
-        "description": "deaf and corresponding English entry", 
-        "sound": "Track1951.mp3", 
-        "image": "logo.png"
-    }, 
-    {
-        "Wajarri": "gurlga bunthu", 
-        "English": "deaf", 
         "description": "not listening, unable to hear, deaf", 
         "sound": "Track444.mp3", 
         "image": "logo.png"
@@ -3047,7 +3040,7 @@
     {
         "Wajarri": "nharnu", 
         "English": "dialect name, N.W. wajarri", 
-        "description": "name given to a dialect of wajarri spoken in the north-west of wajarri country, around Woodlands Station, and east from there to near Mt Augustus. The word 'nharnu' is a general questioning word in this dialect and is an unusual feature, after which the dialect is named", 
+        "description": "name given to a dialect of wajarri spoken in the north-east of wajarri country, around Woodlands Station, and east from there to near Mt Augustus. The word 'nharnu' is a general questioning word in this dialect and is an unusual feature, after which the dialect is named", 
         "sound": "Track456.mp3", 
         "image": "logo.png"
     }, 
@@ -3182,13 +3175,6 @@
         "English": "dog", 
         "description": "dog, domesticated dog", 
         "sound": "Track479.mp3", 
-        "image": "logo.png"
-    }, 
-    {
-        "Wajarri": "wanja", 
-        "English": "dog", 
-        "description": "dog", 
-        "sound": "Track480.mp3", 
         "image": "logo.png"
     }, 
     {
@@ -4594,7 +4580,7 @@
     {
         "Wajarri": "ngarrba", 
         "English": "grass seed, edible", 
-        "description": "edible grass seeds, the plant which produces these seeds; similar to wheat or sago which used to be ground for damper; grows mainly in swamp country; ngarrba damper was cooked on the hot sand. Yamajis would get some burning bark \u2011 thanda- and hold it over the damper as it was cooking until it dried out, and then cover with more hot sand until it was cooked. Drying out the damper first, kept sand from going into the runny dough. The top grinding stone may be called 'ngarrbamaanu'", 
+        "description": "edible grass seeds, the plant which produces these seeds; similar to wheat or sago which used to be ground for damper; grows mainly in swamp country; ngarrba damper was cooked on the hot sand. Yamajis would get some burning bark thanda- and hold it over the damper as it was cooking until it dried out, and then cover with more hot sand until it was cooked. Drying out the damper first, kept sand from going into the runny dough. The top grinding stone may be called 'ngarrbamaanu'", 
         "sound": "Track735.mp3", 
         "image": "logo.png"
     }, 
@@ -6589,7 +6575,7 @@
     {
         "Wajarri": "wanjinyu", 
         "English": "miniritchie-like tree", 
-        "description": "a type of tree, similar to a miniritchie (gagarru); Covered with curly bark \u2011 rub it and the bark comes off and may be used for smoking or mixed with guba for chewing", 
+        "description": "a type of tree, similar to a miniritchie (gagarru); Covered with curly bark rub it and the bark comes off and may be used for smoking or mixed with guba for chewing", 
         "sound": "Track1067.mp3", 
         "image": "logo.png"
     }, 
@@ -6820,14 +6806,14 @@
     {
         "Wajarri": "mulu-mulu", 
         "English": "mulla mulla", 
-        "description": "a herbaceous annual found on sandstone country, granite hills, around riverbanks and lakes; flowers range from white to pink and purple. May be cooked and eaten, put in a soup \u2011 similar to spinach when cooked; flowerheads similar to kapok \u2011 used to be used to stuff pillows and mattresses", 
+        "description": "a herbaceous annual found on sandstone country, granite hills, around riverbanks and lakes; flowers range from white to pink and purple. May be cooked and eaten, put in a soup similar to spinach when cooked; flowerheads similar to kapok used to be used to stuff pillows and mattresses", 
         "sound": "Track1108.mp3", 
         "image": "logo.png"
     }, 
     {
         "Wajarri": "murlu-murlu", 
         "English": "mulla mulla", 
-        "description": "mulla-mulla; a herbaceous annual found on sandstone country, granite hills, around riverbanks and lakes; flowers range from white to pink and purple. May be cooked and eaten, put in a soup \u2011 similar to spinach when cooked; flowerheads similar to kapok \u2011 used to be used to stuff pillows and mattresses", 
+        "description": "mulla-mulla; a herbaceous annual found on sandstone country, granite hills, around riverbanks and lakes; flowers range from white to pink and purple. May be cooked and eaten, put in a soup similar to spinach when cooked; flowerheads similar to kapok used to be used to stuff pillows and mattresses", 
         "sound": "Track1109.mp3", 
         "image": "logo.png"
     }, 
@@ -9641,7 +9627,7 @@
     {
         "Wajarri": "nhilgi", 
         "English": "song feature", 
-        "description": "a feature of songs \u2011 specifically the change over from one song to another", 
+        "description": "a feature of songs specifically the change over from one song to another", 
         "sound": "Track1323.mp3", 
         "image": "logo.png"
     }, 
@@ -10297,7 +10283,7 @@
         "image": "logo.png"
     }, 
     {
-        "Wajarri": "burdabinmanha", 
+        "Wajarri": "burda binmanha", 
         "English": "talking about someone", 
         "description": "talking about someone", 
         "sound": "Track1645.mp3", 
@@ -10901,7 +10887,7 @@
     {
         "Wajarri": "warlgu", 
         "English": "tree, quandong", 
-        "description": "quandong; a type of small tree or tall shrub with edible fruit by the same name;  the seed can be crushed and the inside eaten, or mixed with dried meat and eaten; a 'medicinal ointment can be made from the seeds and used on sores; was used to treat cuts and wounds on kangaroo dogs (after being in a fight with an emu or kangaroo); popular with emus; secondary meaning: wine (from the red colour \u2011 but also white wine)", 
+        "description": "quandong; a type of small tree or tall shrub with edible fruit by the same name;  the seed can be crushed and the inside eaten, or mixed with dried meat and eaten; a 'medicinal ointment can be made from the seeds and used on sores; was used to treat cuts and wounds on kangaroo dogs (after being in a fight with an emu or kangaroo); popular with emus; secondary meaning: wine (from the red colour but also white wine)", 
         "sound": "Track1286.mp3", 
         "image": "logo.png"
     }, 
