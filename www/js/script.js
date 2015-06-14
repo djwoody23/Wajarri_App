@@ -1,4 +1,15 @@
 
+function OpenUrlExternal(address)
+{
+    if (device.platform.toLowerCase() === "ios")
+    {
+		window.open(address, '_system', 'location=no');
+    }
+    else
+    {
+		navigator.app.loadUrl(address, { openExternal:true });
+    }
+}
 
 function checkAudio(id, src)
 {
@@ -412,13 +423,6 @@ $(document).ready(function()
 	{
 		console.log("USING CORDOVA");
 
-		$("a[target='_blank']").click(function(e)
-			{
-				e.preventDefault();
-				window.open($(e.currentTarget).attr('href'), '_system', '');
-			}
-		);
-
 		function onDeviceReady()
 		{
 	        if (device.platform.toLowerCase() === "ios")
@@ -427,6 +431,15 @@ $(document).ready(function()
 	            StatusBar.styleLightContent();
 	           	StatusBar.backgroundColorByName("black");
 	        }
+
+			$("a[target='_blank']").on('click tap',
+				function(e)
+				{
+					e.preventDefault();
+					var val = $(e.currentTarget).attr('href');
+					OpenUrlExternal(val);
+				}
+			);
 
 			onReady();
 			navigator.splashscreen.hide();

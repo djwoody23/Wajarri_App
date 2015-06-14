@@ -56,10 +56,12 @@
 	<!-- Plugins -->
 
 	<!-- Core plugins -->
-	<gap:plugin name="org.apache.cordova.device" />
-	<gap:plugin name="org.apache.cordova.splashscreen" />
-	<gap:plugin name="org.apache.cordova.media" />
-	<gap:plugin name="org.apache.cordova.statusbar" />
+	<gap:plugin name="cordova-plugin-device" />
+	<gap:plugin name="cordova-plugin-splashscreen" />
+	<gap:plugin name="cordova-plugin-media" />
+	<gap:plugin name="cordova-plugin-statusbar" />
+	<gap:plugin name="cordova-plugin-whitelist" />
+	<!--gap:plugin name="org.apache.cordova.inappbrowser" /-->
 	<!--gap:plugin name="com.phonegap.plugin.statusbar" /-->
 
 	<!-- Define app icon for each platform. -->
@@ -112,6 +114,9 @@
 	<!--gap:splash src="res/ios/screen/screen-ipad-landscape.png" gap:platform="ios" width="1024" height="768" />
 	<gap:splash src="res/ios/screen/screen-ipad-landscape-2x.png" gap:platform="ios" width="2048" height="1536" /-->
 	
-	<access origin="*"/>
+	<allow-navigation href="http://www.bundiyarra.org.au/*" />
+	<allow-intent href="http://www.bundiyarra.org.au/*" />
+	<access origin="http://www.bundiyarra.org.au" />
+	<access origin="*" />
 
 </widget>
