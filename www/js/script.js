@@ -412,6 +412,13 @@ $(document).ready(function()
 	{
 		console.log("USING CORDOVA");
 
+		$("a[target='_blank']").click(function(e)
+			{
+				e.preventDefault();
+				window.open($(e.currentTarget).attr('href'), '_system', '');
+			}
+		);
+
 		function onDeviceReady()
 		{
 	        if (device.platform.toLowerCase() === "ios")
