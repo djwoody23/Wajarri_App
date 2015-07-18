@@ -1,95 +1,74 @@
 
-function OpenUrlExternal(address)
+var loading =
 {
-    if (device.platform.toLowerCase() === "ios")
-    {
-		window.open(address, '_system', 'location=no');
-    }
-    else
-    {
-		navigator.app.loadUrl(address, { openExternal:true });
-    }
-}
+	showing: true,
+	id: "#loading",
+	container: undefined,
+	show: function()
+	{
+		loading.showing = true;
+		$(loading.id).show();
+	},
+	hide: function()
+	{
+		$(loading.id).hide();
+		loading.showing = false;
+	},
+	init: function(id)
+	{
+    	this.container = $(id);
 
-function checkAudio(id, src)
+    	function pre(e, data)
+		{
+			if (loading.showing) { return; }
+
+		    var to = data.toPage;
+
+		    if (typeof to === 'string')
+		    {
+	            e.preventDefault();
+                e.stopPropagation();
+
+	        	loading.show();
+
+		        var u = $.mobile.path.parseUrl(to);
+		        var page_id = u.hash || "#";//u.pathname;
+
+				if (page_id)
+			    {
+			    	var container = loading.container;
+					//console.log("Loading: " + page_id);
+					setTimeout(function()
+					{
+						//console.log(data);
+						//$.mobile.navigate(page_id);
+						container.pagecontainer("change", page_id, data.options);
+					}, 5);
+				}
+		    }
+		}
+
+		function post(e, data)
+	    {
+		    /*var page_id = loading.container.pagecontainer("getActivePage")[0].id;
+		    if (page_id)
+		    {
+			    console.log("Loaded:  #" + page_id);
+			}*/
+
+	    	loading.hide();
+	    }
+
+		this.container.on('pagebeforechange', pre);
+
+		this.container.on('pagechange', post);
+	}
+};
+
+
+function changepage(id, data, opts)
 {
-	var audio = $(id)[0];
-
-	if (src)
-	{
-		$("#detail-audio").attr("src", src);
-	}
-
-	if (typeof(Media) !== 'undefined') // FIX: Media UNDEFINED!
-	{
-		//console.log("HAS MEDIA");
-
-		if (!$(id).data("media"))
-		{
-			audio.play = function()
-			{
-				//console.log("Playing " + $(this).data("media").src);
-				$(this).data("media").play();
-			};
-
-			audio.pause = function()
-			{
-				//console.log("Pausing " + $(this).data("media").src);
-				$(this).data("media").pause();
-			};
-
-			/*audio.stop = function()
-			{
-				//console.log("Stopping " + $(this).data("media").src);
-				$(this).data("media").stop();
-			};*/
-		}
-		else
-		{
-			audio.pause();
-		}
-
-        function getMediaURL(s)
-        {
-            if (device.platform.toLowerCase() === "android")
-            {
-                return "/android_asset/www/" + s;
-            }
-            return s;
-        }
-
-		var path = getMediaURL($(id).attr('src'));
-
-
-		function onError(error)
-		{
-			if (error && error.code)
-			{
-				console.log("[ERROR] Failed to load/play \"" + path + "\" (" + error.code + ").");
-			}
-		}
-
-		function onStatus(value)
-		{
-			console.log("Status update \"" + path + "\". " + JSON.stringify(value));
-		}
-
-		console.log("Audio: \"" + path + "\"");
-		$(id).data("media", new Media(path, undefined, onError));
-	}
-	else
-	{
-		if (typeof(audio.play) == 'undefined')
-		{
-			audio.play = function () { alert("Browser cannot play audio!"); };
-		}
-		if (typeof(audio.pause) == 'undefined')
-		{
-			audio.pause = function () {};
-		}
-	}
-
-	return audio;
+    $("body").pagecontainer("change", id + (data ? "?" + $.param(data) : ""), opts);
 }
 
 function updateList(id, info, label, collapsible)
@@ -207,13 +186,12 @@ function loadDictionaryValues(id, info, label, collapsible)
 
 	list.addClass('new-list');
 
-	updateList(id, info.get(), label, collapsible);
-
 	function onChange(e)
 	{
-		var item = $(e.target).closest("li");
+		var target = $(e.target);
+		var item = target.closest("li");
 
-		if ($(e.target).data("remove"))
+		if (target.data("remove"))
 		{
 			var index = parseInt(item.data("id"));
 			info.remove(index);
@@ -221,18 +199,13 @@ function loadDictionaryValues(id, info, label, collapsible)
 		}
 		else
 		{
-			var index = parseInt(item.data("index"));
-			//store the information in the next page's data
-			$("#details-page").data("iterator", info.iterator(index));
-			//change the page # to second page. 
-			//Now the URL in the address bar will read index.html#details-page
-			//where #details-page is the "id" of the second page
-			//we're gonna redirect to that now using changePage() method
-	        $("body").pagecontainer("change", "#details-page");//, { data: { id: index } });
+	        changepage("#details-page", { id: item.data("index"), dictionary: info.id });
 		}
 	}
 
     list.on("click tap", "li", onChange);
+
+	updateList(id, info.get(), label, collapsible);
 }
 
 function dictionaryLabel(item)
@@ -262,192 +235,220 @@ function wajarriInit()
 
 function favouritesInit()
 {
-	loadDictionaryValues("#fav-list", global.favourites, favouritesLabel);
+	loadDictionaryValues("#fav-list", global.dictionary.favourites, favouritesLabel);
 }
 
 function favouritesShow()
 {
-	updateList("#fav-list", global.favourites.get(), favouritesLabel);
+	updateList("#fav-list", global.dictionary.favourites.get(), favouritesLabel);
 }
 
 
-function detailsInit()
+var handlers =
 {
-	function next()
+	"details-page":
 	{
-		var iterator = $("#details-page").data("iterator");
-		if (iterator && iterator.next())
+		_update: function(history)
 		{
-			detailsShow();
-		}
-	}
-	function previous()
-	{
-		var iterator = $("#details-page").data("iterator");
-		if (iterator && iterator.previous())
-		{
-			detailsShow();
-		}
-	}
-	function addFavourite()
-	{
-		var iterator = $("#details-page").data("iterator");
-		if (iterator && iterator.current())
-		{
-			global.favourites.add(iterator.current().id);
-		}
-	}
+			var details = $("#details-page");
 
-	$("#next").click(next);
-	$("#prev").click(previous);
-	$("#detail-favourites-add").click(addFavourite);
-}
-
-function detailsShow()
-{
-	var details = $("#details-page");
-	var iterator = details.data("iterator");
-	if (iterator)
-	{
-		var id = iterator.current().id;
-		var info = global.dictionary.data[id];
-		if (info)
-		{
-			checkAudio("#detail-audio", global.directories.audio(info.sound));
-
-			details.find("#detail-wajarri").html(info.Wajarri);
-			details.find("#detail-english").html(info.English);
-			details.find("#detail-description").html(info.description);
-			details.find("#detail-image").css("background-image", "url(\"" + global.directories.image_dictionary(info.image) + "\")");
-		}
-		details.find('.ui-btn-active').removeClass('ui-btn-active');
-	}
-}
-
-function detailsHide()
-{
-	checkAudio("#detail-audio").pause();
-}
-
-
-var loading =
-{
-	showing: true,
-	id: "#loading",
-	show: function(page_id)
-	{
-		this.showing = true;
-		$(this.id).show();
-		if (page_id)
-	    {
-			//console.log("Loading: " + page_id);
-			setTimeout(function()
+			var iterator = details.data("iterator");
+			if (iterator)
 			{
-				$("body").pagecontainer("change", page_id);
-			}, 50);
+				var id = iterator.current().id;
+				var info = global.dictionary.data[id];
+				if (info)
+				{
+					$("#detail-audio").attr("src", global.directories.audio(info.sound));
+
+					details.find("#detail-wajarri").html(info.Wajarri);
+					details.find("#detail-english").html(info.English);
+					details.find("#detail-description").html(info.description);
+					details.find("#detail-image").css("background-image", "url(\"" + global.directories.image_dictionary(info.image) + "\")");
+				}
+				details.find('.ui-btn-active').removeClass('ui-btn-active');
+
+				if (!history)
+				{
+					$.mobile.navigate.navigator.squash("#details-page?id=" + id + "&dictionary=" + details.data("dictionary"));
+				}
+			}
+		},
+
+		pagecreate: function(url, hash, query, data)
+		{
+			var self = handlers["details-page"];
+
+			function iteratorCheck(cb)
+			{
+				return function ()
+				{
+					var iterator = $("#details-page").data("iterator");
+					if (iterator)
+					{
+						cb(iterator);
+					}
+				};
+			}
+
+			function next(iterator)
+			{
+				if (iterator.next())
+				{
+					self._update(false);
+				}
+			}
+			function previous(iterator)
+			{
+				if (iterator.previous())
+				{
+					self._update(false);
+				}
+			}
+			function addFavourite(iterator)
+			{
+				if (iterator.current())
+				{
+					global.dictionary.favourites.add(iterator.current().id);
+				}
+			}
+
+			$("#next").click(iteratorCheck(next));
+			$("#prev").click(iteratorCheck(previous));
+			$("#detail-favourites-add").click(iteratorCheck(addFavourite));
+		},
+		pagebeforeshow: function(url, hash, query, data)
+		{
+			if (!query.dictionary)
+			{
+				alert("ERROR");
+				return;
+			}
+
+			var details = $("#details-page");
+			var iterator = details.data("iterator");
+			if (!iterator || details.data("dictionary") != query.dictionary)
+			{
+				var index = parseInt(query.id);
+
+				var dict = global.dictionary[query.dictionary];
+				var iterator = dict.iterator(index);
+
+				details.data("dictionary", query.dictionary);
+				details.data("iterator", iterator);
+			}
+
+			handlers["details-page"]._update(true);
+		},
+		pagebeforehide: function(url, hash, query, data)
+		{
+			var details = $("#details-page");
+			details.data("iterator", null);
+			$("#detail-audio")[0].pause();
 		}
-	},
-	hide: function()
-	{
-	    var page_id = $("body").pagecontainer("getActivePage")[0].id;
-	    if (page_id)
-	    {
-		    console.log("Loaded:  #" + page_id);
-		}
-		$(this.id).hide();
-		this.showing = false;
 	}
 };
 
-
-
-
-$(document).ready(function()
+function createHandlerRegex(id)
 {
-    $.mobile.defaultPageTransition = 'none';
-    $.mobile.defaultDialogTransition = 'none';
+	return "^#" + id + "([/][^?]*)?[?]?(.*)?$";
+};
 
-
-    var $pages = $("body");
-    $pages.pagecontainer({ defaults: true });
-
-
-	$pages.on('pagebeforechange', function(e, data)
+function createHandler(id)
+{
+	var page_handler = handlers[id];
+	if (!page_handler)
 	{
-	    var to = data.toPage;
-
-	    if (typeof to === 'string' && !loading.showing)
-	    {
-            e.preventDefault();
-
-	        var u = $.mobile.path.parseUrl(to);
-	        to = u.hash || u.pathname;
-
-        	loading.show(to);
-	    }
-	});
-
-	$pages.on("pagechange", function(e, data)
-    {
-    	loading.hide();
-    });
-
-    //pagecreate event for each page (triggers only once)
-    $pages.on("pagecreate", "#english-page", englishInit);
-
-    $pages.on("pagecreate", "#wajarri-page", wajarriInit);
-
-    $pages.on("pagecreate", "#fav-page", favouritesInit);
-    $pages.on("pagebeforeshow", "#fav-page", favouritesShow);
-
-    $pages.on("pagecreate", "#details-page", detailsInit);
-    $pages.on("pagebeforeshow", "#details-page", detailsShow);
-    $pages.on("pagebeforehide", "#details-page", detailsHide);
-
-	function onReady()
-	{
-		console.log("onReady");
-
-        var pages = $(".page");
-        for (var i = 0; i < pages.length; ++i)
-        {
-        	var id = "#" + pages[i].id;
-        	console.log("Initializing: " + id);
-            $.mobile.loadPage(id, { showLoadMsg: false });
-        }
-
-    	loading.hide();
+		console.log("[DEFAULT] Missing Page Handler: " + id);
+		return function () { console.log("[DEFAULT] Missing Page Handler: " + id); };
 	}
 
-	if (typeof(window.cordova) !== 'undefined')
+	return function (type, match, ui, page, e)
 	{
-		console.log("USING CORDOVA");
-
-		function onDeviceReady()
+		var handler = page_handler[type];
+		if (handler)
 		{
-	        if (device.platform.toLowerCase() === "ios")
-	        {
-	           	StatusBar.overlaysWebView(false);
-	            StatusBar.styleLightContent();
-	           	StatusBar.backgroundColorByName("black");
-	        }
+			//console.log(match);
+			var url = match[0];
+			var hash = match[1];
+			var query = match[2];
+			
+			if (hash)
+			{
+				hash = hash.split('/');
+			}
 
-			$("a[target='_blank']").on('click tap',
-				function(e)
+			if (query)
+			{
+				query = query.split('&').reduce(
+					function(o, v, i)
+					{
+						var items = v.split('=');
+						o[items[0]] = items[1];
+						return o;
+					},
+					{}
+				);
+			}
+
+			handler(url, hash, query, { type: type, match: match, ui: ui, page: page, e: e });
+		}
+		else
+		{
+			console.log("[DEFAULT] Missing Event Handler: " + id + "." + type);
+		}
+	};
+};
+
+var routers = {};
+
+routers[createHandlerRegex("details-page")] =
+{
+	handler: createHandler("details-page"),
+	events: "c,bs,bh"
+};
+
+
+$(document).ready(
+	function()
+	{
+		var $pages = $("body");
+		loading.init($pages);
+
+		function onReady()
+		{
+	        global.dictionary.get(
+	        	function ()
 				{
-					e.preventDefault();
-					var val = $(e.currentTarget).attr('href');
-					OpenUrlExternal(val);
+				    $pages.pagecontainer({ defaults: true });
+
+				    //pagecreate event for each page (triggers only once)
+				    $pages.on("pagecreate", "#english-page", englishInit);
+
+				    $pages.on("pagecreate", "#wajarri-page", wajarriInit);
+
+				    $pages.on("pagecreate", "#fav-page", favouritesInit);
+				    $pages.on("pagebeforeshow", "#fav-page", favouritesShow);
+
+				    //$pages.on("pagecreate", "#details-page", detailsInit);
+				    //$pages.on("pagebeforeshow", "#details-page", detailsShow);
+				    //$pages.on("pagebeforehide", "#details-page", detailsHide);
+
+					var router = new $.mobile.Router(routers);
+
+			        var pages = $(".page");
+
+					console.log("[DEFAULT] Loading Pages");
+			        pages.each(function(i, el) { $.mobile.loadPage("#" + el.id, { showLoadMsg: false }); });
+					console.log("[DEFAULT] Loaded " + pages.length + " pages");
+
+					$.mobile.initializePage();
+
+			    	loading.hide();
 				}
 			);
-
-			onReady();
-			navigator.splashscreen.hide();
 		}
-		document.addEventListener("deviceready", onDeviceReady);
+
+	    document.addEventListener("deviceready", onReady, false);
 	}
-	else
-	{
-		$(document).ready(onReady);
-	}
-});
+);

@@ -1,124 +1,4 @@
 
-var Iterator = function(values, index)
-{
-    this.values = values || [];
-    this.index = index == undefined ? 0 : index;
-    this.length = this.values.length;
-};
-Iterator.prototype.current = function()
-{
-    return this.values[this.index];
-};
-Iterator.prototype.next = function()
-{
-    if (this.index < this.values.length - 1)
-    {
-        this.index++;
-        return this.current();
-    }
-    return undefined;
-};
-Iterator.prototype.previous = function()
-{
-    if (this.index > 0)
-    {
-        this.index--;
-        return this.current();
-    }
-    return undefined;
-};
-
-
-
-function sortValue(id)
-{
-    return function(a, b)
-    {
-        return a[id].toLowerCase().localeCompare(b[id].toLowerCase());
-    };
-}
-
-function sortText()
-{
-    return function(a, b)
-    {
-        //return a.text.localeCompare(b.text);
-        var at = a.text.toLowerCase();
-        var bt = b.text.toLowerCase();
-        return (at < bt ? -1 : (at > bt ? 1 : 0));
-    };
-}
-
-function findValue(id, value)
-{
-    return function(a)
-    {
-        return a[id].toLowerCase().match(value.toLowerCase());
-    };
-}
-
-function insertSort(arr)
-{
-	var len = arr.length;
-    for (var i = 1; i < len; ++i)
-    {
-        var tmp = arr[i], j = i;
-        while (arr[j - 1] > tmp)
-        {
-            arr[j] = arr[j - 1];
-            --j;
-        }
-        arr[j] = tmp;
-    }
-    return arr;
-}
-
-var browser = 
-{
-    init: function () 
-    {
-        this.id = this.searchString(navigator.userAgent) || "Other";
-        this.version = this.searchVersion(navigator.userAgent) || this.searchVersion(navigator.appVersion) || "Unknown";
-        this.name = this.browserNames[this.id];
-        this.text = this.name + ' ' + this.version;
-    },
-
-    searchString: function (data) 
-    {
-        for (var key in this.browserNames)
-        {
-            if (data.indexOf(key) != -1)
-            {
-                return key;
-            }
-        }
-        return undefined;
-    },
-
-    searchVersion: function (data)
-    {
-        var index = data.indexOf(this.id);
-        if (index != -1)
-        {
-            return parseFloat(data.substring(index + this.id.length + 1));
-        }
-        return undefined;
-    },
-
-    browserNames:
-    {
-        "Chrome":   "Chrome",
-        "MSIE":     "Internet Explorer",
-        "Firefox":  "Firefox",
-        "Safari":   "Safari",
-        "Opera":    "Opera",
-        "Other":    "Other"
-    }
-};
-browser.init();
-
-
-
 var global =
 {
     directories:
@@ -127,15 +7,20 @@ var global =
         image: function(image) { return "images/" + image; },
         image_dictionary: function(image) { return this.image("dictionary/" + image); }
     },
+
     settings:
     {
         collapsible_list: true
     },
+
     dictionary:
     {
         data: [],
+        loading: false,
+
         wajarri:
         {
+            id: "wajarri",
             data: [],
 
             set: function(data)
@@ -170,8 +55,10 @@ var global =
                 return new Iterator(this.get(), index);
             }
         },
+
         english:
         {
+            id: "english",
             data: [],
 
             set: function(data)
@@ -206,25 +93,146 @@ var global =
                 return new Iterator(this.get(), index);
             }
         },
+
+        favourites:
+        {
+            id: "favourites",
+            items: [],
+            data: [],
+
+            init: function()
+            {
+                this.load();
+            },
+            load: function()
+            {
+    			this.items = helpers.user_data.getJSON("favourites", true) || this.items;
+    			//console.log("Loaded Favourites: " + JSON.stringify(this.items));
+            },
+            save: function()
+            {
+    			helpers.user_data.setJSON("favourites", this.items);
+            },
+            clear: function()
+            {
+    			this.items = [];
+    			this.save();
+            },
+            add: function(index)
+            {
+                if (index == 0 || index)
+                {
+                    if (this.items.indexOf(index) == -1)
+                    {
+                        this.items.push(index);
+                    }
+                    this.save();
+                }
+            },
+            remove: function(index)
+            {
+                var id = this.items.indexOf(index);
+                if (id != -1)
+                {
+                    this.items.splice(id, 1);
+                }
+                this.save();
+            },
+            update: function(data)
+            {
+                var values = [];
+                var items = this.items;
+
+                for (var i = 0; i < items.length; ++i)
+                {
+                    var inf = data[items[i]];
+                    values.push(
+                    {
+                        id: inf.id,
+                        text: inf.Wajarri// + " - " + inf.English
+                    });
+                }
+
+                values.sort(sortText());
+
+                for (var i = 0; i < values.length; ++i)
+                {
+                    values[i].index = i;
+                }
+
+                this.data = values;
+                return this.data;
+            },
+            get: function()
+            {
+                return this.update(global.dictionary.data);
+            },
+            iterator: function(index)
+            {
+                return new Iterator(this.get(), index);
+            }
+        },
+
         init: function()
         {
+            console.log("[DICTIONARY] Loading");
+            this.set();
+            this.loading = true;
             //ajax call to Json Database
             $.ajax(
             {
                 type: 'GET',
                 dataType: 'json',
                 mimeType: "application/json",
-                async: false,
+                //async: false,
                 url: "wajarriDic19052015.json",
-                success: function(data) { global.dictionary.set(data); },
+                success: function(data)
+                {
+                    global.dictionary.set(data);
+                    global.dictionary.loading = false;
+                    console.log("[DICTIONARY] Loaded " + data.length + " entries");
+                },
                 error: function(err)
                 {
-                    console.log("Can't Load JSON: " + err);
+                    global.dictionary.loading = false;
+                    console.log("[DICTIONARY] WARNING: Can't Load JSON: " + err);
                 }
             });
+
+            this.favourites.init();
         },
+
+        get: function(cb, timeout)
+        {
+            if (!global.dictionary.loading)
+            {
+                cb(global.dictionary.data);
+                return;
+            }
+
+            var interval = 50;
+            var total = timeout || 10000;
+
+            var int_var = setInterval(check, 50);
+
+            function check()
+            {
+                if (global.dictionary.loading && total > 0)
+                {
+                    total -= interval;
+                }
+                else
+                {
+                    clearInterval(int_var);
+                    cb(global.dictionary.data);
+                }
+            }
+        },
+
         set: function(data)
         {
+            data = data || [];
+
             for (var i = 0; i < data.length; ++i)
             {
                 data[i].id = i;
@@ -233,121 +241,12 @@ var global =
             this.data = data;
             this.wajarri.set(this.data);
             this.english.set(this.data);
-            
-            console.log("Loaded Dictionary");
         }
     },
-    favourites:
-    {
-        items: [],
-        data: [],
 
-        init: function()
-        {
-            this.load();
-            //this.clear();
-        },
-        load: function()
-        {
-            var data = window.localStorage.getItem("favourites");
-            this.items = (data && data != "") ? JSON.parse(data) : [];
-            console.log("Saved Favourites: " + JSON.stringify(this.items));
-        },
-        save: function()
-        {
-            window.localStorage.setItem("favourites", JSON.stringify(this.items));
-        },
-        clear: function()
-        {
-            window.localStorage.setItem("favourites", "[]");
-            this.items = [];
-        },
-        add: function(index)
-        {
-            if (index == 0 || index)
-            {
-                if (this.items.indexOf(index) == -1)
-                {
-                    this.items.push(index);
-                }
-                this.save();
-            }
-        },
-        remove: function(index)
-        {
-            var id = this.items.indexOf(index);
-            if (id != -1)
-            {
-                this.items.splice(id, 1);
-            }
-            this.save();
-        },
-        update: function(data)
-        {
-            var values = [];
-            var items = this.items;
-
-            for (var i = 0; i < items.length; ++i)
-            {
-                var inf = data[items[i]];
-                values.push(
-                {
-                    id: inf.id,
-                    text: inf.Wajarri// + " - " + inf.English
-                });
-            }
-
-            values.sort(sortText());
-
-            for (var i = 0; i < values.length; ++i)
-            {
-                values[i].index = i;
-            }
-
-            this.data = values;
-        },
-        get: function()
-        {
-            this.update(global.dictionary.data);
-            return this.data;
-        },
-        iterator: function(index)
-        {
-            return new Iterator(this.get(), index);
-        }
-    },
-    warning:
-    {
-        warning_html:
-            '<div class="warning">' +
-                '<span class="warning_text">Warning: Your browser (<span></span>) is unsupported. Upgrade! <a href="http://www.microsoft.com/en-au/download/internet-explorer-9-details.aspx">Link</a></span>' +
-                '<span class="warning_x" onclick="global.warning.hide()">x</span>' +
-            '</div>',
-        show: function()
-        {
-            $('.warning').css('visibility', 'visible');
-            $('body').css('top', $('.warning').height() + 'px');
-        },
-        hide: function()
-        {
-            $('.warning').css('visibility', 'hidden');
-            $('body').css('top', '0');
-        },
-        init: function()
-        {
-            if (browser.id == 'MSIE' && browser.version < 9)
-            {
-                $('body').append(this.warning_html);
-                $('.warning_text').find("span").html(browser.text);
-                this.show();
-            }
-        }
-    },
     init: function()
     {
-        this.warning.init();
         this.dictionary.init();
-        this.favourites.init();
     }
 };
 
