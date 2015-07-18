@@ -10,6 +10,10 @@ Iterator.prototype.current = function()
 {
     return this.values[this.index];
 };
+Iterator.prototype.set = function(index)
+{
+    this.index = index == undefined ? 0 : index;
+};
 Iterator.prototype.next = function()
 {
     if (this.index < this.values.length - 1)
@@ -28,6 +32,36 @@ Iterator.prototype.previous = function()
     }
     return undefined;
 };
+
+
+
+function parseHash(url)
+{
+    url = url ? (new URL(url)).hash : location.hash;
+    var parts = url.split('?');
+    var hash = parts[0];
+    var query = parts[1];
+    
+    if (hash)
+    {
+        hash = hash.split('/');
+    }
+
+    if (query)
+    {
+        query = query.split('&').reduce(
+            function(o, v, i)
+            {
+                var items = v.split('=');
+                o[items[0]] = items[1];
+                return o;
+            },
+            {}
+        );
+    }
+
+    return { url: url, hash: hash, query: query };
+}
 
 
 

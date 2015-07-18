@@ -61,7 +61,7 @@
                     return media;
                 };
                 
-                Audio.prototype.play = function ()
+                HTMLAudioElement.prototype.play = function ()
                 {
                     var media = audio_media(this);
 
@@ -72,7 +72,7 @@
                     }
                 };
 
-                Audio.prototype.pause = function ()
+                HTMLAudioElement.prototype.pause = function ()
                 {
                     var media = audio_media(this);
 
@@ -85,13 +85,13 @@
             }
             else
             {
-                if (Audio.prototype.play == undefined)
+                if (HTMLAudioElement.prototype.play == undefined)
                 {
-                    Audio.prototype.play = alertFunction("Browser cannot play audio!");
+                    HTMLAudioElement.prototype.play = alertFunction("Browser cannot play audio!");
                 }
-                if (Audio.prototype.pause == undefined)
+                if (HTMLAudioElement.prototype.pause == undefined)
                 {
-                    Audio.prototype.pause = empty;
+                    HTMLAudioElement.prototype.pause = empty;
                 }
             }
         },
@@ -107,7 +107,7 @@
 
             phonegap.platform.init();
 
-            if (phonegap.platform.ios && StatusBar != undefined)
+            if (phonegap.platform.ios && typeof(StatusBar) !== 'undefined')
             {
                 StatusBar.overlaysWebView(false);
                 StatusBar.styleLightContent();
@@ -125,6 +125,8 @@
                 }
             );
 
+            phonegap.fixAudio();
+
             navigator.splashscreen.hide();
         },
 
@@ -134,7 +136,7 @@
             
             $(document).ready(function()
             {
-                phonegap.enabled = window.cordova != undefined;
+                phonegap.enabled = typeof(window.cordova) !== 'undefined';
                 console.log("[PHONEGAP] Enabled: " + phonegap.enabled);
                 if (!phonegap.enabled)
                 {

@@ -316,10 +316,19 @@ var handlers =
 			$("#next").click(iteratorCheck(next));
 			$("#prev").click(iteratorCheck(previous));
 			$("#detail-favourites-add").click(iteratorCheck(addFavourite));
+
+			$("#detail-audio-play").click(
+				function ()
+				{
+					$("#detail-audio")[0].play();
+				}
+			);
 		},
-		pagebeforeshow: function(url, hash, query, data)
+		pagebeforeshow: function()
 		{
-			if (!query.dictionary)
+			var data = parseHash();
+			var query = data.query;
+			if (!query || !query.dictionary)
 			{
 				alert("ERROR");
 				return;
@@ -337,6 +346,10 @@ var handlers =
 				details.data("dictionary", query.dictionary);
 				details.data("iterator", iterator);
 			}
+			else if (query.id != iterator.index)
+			{
+				iterator.set(query.id);
+			}
 
 			handlers["details-page"]._update(true);
 		},
@@ -349,102 +362,48 @@ var handlers =
 	}
 };
 
-function createHandlerRegex(id)
-{
-	return "^#" + id + "([/][^?]*)?[?]?(.*)?$";
-};
-
-function createHandler(id)
-{
-	var page_handler = handlers[id];
-	if (!page_handler)
-	{
-		console.log("[DEFAULT] Missing Page Handler: " + id);
-		return function () { console.log("[DEFAULT] Missing Page Handler: " + id); };
-	}
-
-	return function (type, match, ui, page, e)
-	{
-		var handler = page_handler[type];
-		if (handler)
-		{
-			//console.log(match);
-			var url = match[0];
-			var hash = match[1];
-			var query = match[2];
-			
-			if (hash)
-			{
-				hash = hash.split('/');
-			}
-
-			if (query)
-			{
-				query = query.split('&').reduce(
-					function(o, v, i)
-					{
-						var items = v.split('=');
-						o[items[0]] = items[1];
-						return o;
-					},
-					{}
-				);
-			}
-
-			handler(url, hash, query, { type: type, match: match, ui: ui, page: page, e: e });
-		}
-		else
-		{
-			console.log("[DEFAULT] Missing Event Handler: " + id + "." + type);
-		}
-	};
-};
-
-var routers = {};
-
-routers[createHandlerRegex("details-page")] =
-{
-	handler: createHandler("details-page"),
-	events: "c,bs,bh"
-};
-
 
 $(document).ready(
 	function()
 	{
 		var $pages = $("body");
-		loading.init($pages);
+		//loading.init($pages);
+	    $pages.pagecontainer({ defaults: true });
+
+	    //$pages.on("pageinit pagebeforeload pageload pagebeforecreate pagecreate pagebeforechange pagechange pagebeforeshow pageshow pagebeforehide pagehide pageremove", function (e) { console.log(e.target.id + ": " + e.type + " (" + location.hash + ")"); });
+
+	    //pagecreate event for each page (triggers only once)
+	    $pages.on("pagecreate", "#english-page", englishInit);
+
+	    $pages.on("pagecreate", "#wajarri-page", wajarriInit);
+
+	    $pages.on("pagecreate", "#fav-page", favouritesInit);
+	    $pages.on("pagebeforeshow", "#fav-page", favouritesShow);
+
+	    $pages.on("pagecreate", "#details-page", function () { handlers["details-page"].pagecreate(); });
+	    $pages.on("pagebeforeshow", "#details-page", function () { handlers["details-page"].pagebeforeshow(); });
+	    $pages.on("pagebeforehide", "#details-page", function () { handlers["details-page"].pagebeforehide(); });
 
 		function onReady()
 		{
 	        global.dictionary.get(
 	        	function ()
 				{
-				    $pages.pagecontainer({ defaults: true });
-
-				    //pagecreate event for each page (triggers only once)
-				    $pages.on("pagecreate", "#english-page", englishInit);
-
-				    $pages.on("pagecreate", "#wajarri-page", wajarriInit);
-
-				    $pages.on("pagecreate", "#fav-page", favouritesInit);
-				    $pages.on("pagebeforeshow", "#fav-page", favouritesShow);
-
-				    //$pages.on("pagecreate", "#details-page", detailsInit);
-				    //$pages.on("pagebeforeshow", "#details-page", detailsShow);
-				    //$pages.on("pagebeforehide", "#details-page", detailsHide);
-
-					var router = new $.mobile.Router(routers);
-
-			        var pages = $(".page");
-
-					console.log("[DEFAULT] Loading Pages");
-			        pages.each(function(i, el) { $.mobile.loadPage("#" + el.id, { showLoadMsg: false }); });
-					console.log("[DEFAULT] Loaded " + pages.length + " pages");
-
 					$.mobile.initializePage();
 
-			    	loading.hide();
+					setTimeout(
+						function ()
+						{
+					        var pages = $(".page");
+
+							console.log("[DEFAULT] Loading Pages");
+					        pages.each(function(i, el) { $.mobile.loadPage("#" + el.id, { showLoadMsg: false }); });
+							console.log("[DEFAULT] Loaded " + pages.length + " pages");
+
+					    	loading.hide();
+						},
+						5
+					);
 				}
 			);
 		}
