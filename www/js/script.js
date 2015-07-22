@@ -349,7 +349,7 @@ InfoPage.prototype.initialize = function()
 	this.page.find("#detail-audio-play").on("tap",
 		function ()
 		{
-			var audio = this.page.find("#detail-audio")[0];
+			var audio = self.page.find("#detail-audio")[0];
 			audio.play && audio.play();
 		}
 	);
