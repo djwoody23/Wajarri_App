@@ -2,6 +2,7 @@
 if (typeof console == "undefined")
 {
     this.console = { log: function (msg) { /*alert(msg);*/ } };
+    alert("[WARNING] console is 'undefined'");
 }
 
 //FIX FOR BUTTON HIGHLIGHTING

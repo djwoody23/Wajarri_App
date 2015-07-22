@@ -12,18 +12,17 @@
 
         <link href="favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
-        <link href="plugins/jquery.mobile-1.4.5.min.css" rel="stylesheet" type="text/css" />
+        <link href="plugins/wajarri.min.css" rel="stylesheet" />
+        <link href="plugins/jquery.mobile.icons.min.css" rel="stylesheet" />
+        <link href="plugins/jquery.mobile.structure-1.4.5.min.css" rel="stylesheet" type="text/css" />
         <link href="css/styles.css" rel="stylesheet" type="text/css" />
 
         <!-- FIX FOR INTERNET EXPLORER -->
         <!--[if lte IE 8]>
-            <style>
-                .page
-                {
-                    background-color: #000 !important;
-                }
-            </style>
+            <style> .page { background-color: #000 !important; } </style>
         <![endif]-->
+
+        <!--script src="wajarriDic19052015.min.json" type="application/json" onload="console.log(arguments);"></script-->
 
         <script src="plugins/jquery-1.11.1.min.js"></script>
         <script src="plugins/jquery.cycle2.min.js"></script>
@@ -31,28 +30,22 @@
         <script src="js/init.js"></script>
 
         <script src="plugins/jquery.mobile.router.min.js"></script>
-        <script src="plugins/jquery.mobile-1.4.5.js"></script>
-
-        <script src="cordova.js"></script>
+        <script src="plugins/jquery.mobile-1.4.5.min.js"></script>
 
         <script src="js/helpers.js"></script>
-        <script src="js/pg.js"></script>
         <script src="js/global.js"></script>
         <script src="js/script.js"></script>  
+        <script src="js/pg.js"></script>
     </head>
     <body>
-
-        <div id="loading" class="fixed-dock">
-            <div class="ui-icon-loading dock"></div>
-        </div>
-
         <!--Home page-->
         <div data-role="page" id="home" class="page">
             <!-- Header -->
+
             <!-- Content-->
             <div class="content" data-role="content">
                 <div class="header">
-                    <img src="images/wajarri-logo.png" class="only-shrink" alt="" />
+                    <img delayedsrc="images/wajarri-logo.png" class="only-shrink" alt="" />
                 </div>
                 <div data-role="controlgroup" class="homeList">
                     <a href="#wajarri-page" class="shadow" data-role="button" data-inset="true">Wajarri</a>
@@ -62,11 +55,11 @@
                 </div>
                 <div class="footer dock-bottom">
                     <div class="dock-left">
-                        <img src="images/bundiyarra_logo.png" class="only-shrink" alt="" />
+                        <img delayedsrc="images/bundiyarra_logo.png" class="only-shrink" alt="" />
                     </div>
                     <div class="dock-right">
                         <div class="dock-top">
-                            <img src="images/ILS_logo.png" class="only-shrink center-horizontal" alt="" />
+                            <img delayedsrc="images/ILS_logo.png" class="only-shrink center-horizontal" alt="" />
                         </div>
                         <div class="dock-bottom">
                             &copy; Bundiyarra Aboriginal Community Aboriginal Corporation
@@ -74,83 +67,100 @@
                     </div>
                 </div>
             </div>
+
             <!-- The footer -->
         </div>
+
         <!--Wajarri page -->
         <div data-role="page" id="wajarri-page" class="page">
             <!-- Header -->
-            <div data-role="header" class="pageheader" data-theme="a" data-id="myHeader">
-                <a href="#" data-rel="back" data-role="button">Go back</a>
+            <div data-role="header" class="pageheader" data-id="myHeader">
+                <a href="#" data-rel="back" data-role="button" data-icon="carat-l">&nbsp;&nbsp;Back</a>
                 <h1>Wajarri</h1>
             </div>
+
             <!-- Content-->
             <div class="content" data-role="content">
                 <input id="waj-list-search" data-type="search">
                 <div id="waj-list"></div>
             </div>
-            <!-- The footer navigation -->
 
-            <nav data-role="navbar" data-id="myfooter" class="pagefooter">
-                <ul>
-                    <li><a href="#home"  data-icon="home">Home</a></li>
-                    <li><a href="#fav-page"  data-icon="star">Favourites</a></li>
-                    <li><a href="#information-page"  data-icon="info">Info</a></li>
-                </ul>
-            </nav>
+            <!-- The footer navigation -->
+            <div data-role="footer" data-id="myfooter" class="pagefooter">
+                <div data-role="navbar">
+                    <ul>
+                        <li><a href="#home" data-icon="home">Home</a></li>
+                        <li><a href="#fav-page"  data-icon="star">Favourites</a></li>
+                        <li><a href="#information-page"  data-icon="info">Info</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
+
         <!--English page -->
         <div data-role="page" id="english-page" class="page">
             <!-- Header -->
-            <div data-role="header" class="pageheader" data-theme="a" data-id="myHeader">
-                <a href="#" data-rel="back" data-role="button">Go back</a>
+            <div data-role="header" class="pageheader" data-id="myHeader">
+                <a href="#" data-rel="back" data-role="button" data-icon="carat-l">&nbsp;&nbsp;Back</a>
                 <h1>English</h1>
             </div>
+
             <!-- Content-->
             <div class="content" data-role="content">
-                <input id="eng-list-search" data-type="search" >
+                <input id="eng-list-search" data-type="search">
                 <div id="eng-list"></div>
             </div>
+
             <!-- The footer navigation -->
-            <nav data-role="navbar" data-id="myfooter" class="pagefooter">
-                <ul>
-                    <li><a href="#home"  data-icon="home">Home</a></li>
-                    <li><a href="#fav-page"  data-icon="star">Favourites</a></li>
-                    <li><a href="#information-page"  data-icon="info">Info</a></li>
-                </ul>
-            </nav>
+            <div data-role="footer" data-id="myfooter" class="pagefooter">
+                <div data-role="navbar">
+                    <ul>
+                        <li><a href="#home" data-icon="home">Home</a></li>
+                        <li><a href="#fav-page"  data-icon="star">Favourites</a></li>
+                        <li><a href="#information-page"  data-icon="info">Info</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
+
         <!--Favourites page -->
         <div data-role="page" id="fav-page" class="page">
             <!-- Header -->
-            <div data-role="header" class="pageheader" data-theme="a" data-id="myHeader">
-                <a href="#" data-rel="back" data-role="button">Go back</a>
+            <div data-role="header" class="pageheader" data-id="myHeader">
+                <a href="#" data-rel="back" data-role="button" data-icon="carat-l">&nbsp;&nbsp;Back</a>
                 <h1>Favourites</h1>
             </div>
+
             <!-- Content-->
             <div class="content" data-role="content">
                 <div id="fav-list"></div>
             </div>
+
             <!-- The footer navigation -->
-            <nav data-role="navbar" data-id="myfooter" class="pagefooter">
-                <ul>
-                    <li><a href="#home"  data-icon="home">Home</a></li>
-                    <li><a href="#information-page"  data-icon="info">Info</a></li>
-                </ul>
-            </nav>
+            <div data-role="footer" data-id="myfooter" class="pagefooter">
+                <div data-role="navbar">
+                    <ul>
+                        <li><a href="#home" data-icon="home">Home</a></li>
+                        <li><a href="#information-page"  data-icon="info">Info</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
+
         <!--Details page -->
         <div data-role="page" id="details-page" class="page">
-            <div data-role="header" class="pageheader" data-theme="a" data-id="myHeader2">
-                <a href="#" data-rel="back" data-role="button">Go back</a>
+            <div data-role="header" class="pageheader" data-id="myHeader2">
+                <a href="#" data-rel="back" data-role="button" data-icon="carat-l">&nbsp;&nbsp;Back</a>
                 <h1>Description</h1>
                 <!-- The navigation bar -->
-                <nav data-role="navbar" class="dock-bottom">
-                    <ul>
-                        <li><a href="#" id="prev" >Previous</a></li>
-                        <li><a href="#" id="next" >Next</a></li>
+                <nav class="dock-bottom ui-navbar">
+                    <ul class="ui-grid-a">
+                        <li class="ui-block-a"><a href="#" id="prev" data-role="button" data-icon="arrow-l" data-iconpos="left">Previous</a></li>
+                        <li class="ui-block-b"><a href="#" id="next" data-role="button" data-icon="arrow-r" data-iconpos="right">Next</a></li>
                     </ul>
                 </nav>
             </div>
+
             <!-- The content area -->
             <div class="content" data-role="content">
                 <div class="content-details">
@@ -190,28 +200,38 @@
                         
                     <div id="playFav">
                         <audio id="detail-audio" type="audio/mpeg"></audio>
-                        <a href="#" data-role="button" id="detail-audio-play" tabindex="1">Play Audio</a>
-                        <!--Add to Favourites -->
-                        <a href="#" data-role="button" id="detail-favourites-add">Add to Favourites</a>
+                        <nav data-role="navbar" data-iconpos="bottom">
+                            <ul>
+                                <li><a href="#" id="detail-audio-play" data-icon="carat-r" >Play Audio</a></li>
+                                <li><a href="#" id="detail-favourites-add" data-icon="plus">Add to Favourites</a></li>
+                            </ul>
+                        </nav>
+                        <!--a href="#" data-role="button" data-icon="carat-r" data-iconpos="right" id="detail-audio-play" tabindex="1">Play Audio</a>
+                        <a href="#" data-role="button" data-icon="plus" data-iconpos="right" id="detail-favourites-add">Add to Favourites</a-->
                     </div>
                 </div>
             </div>
+
             <!-- The footer navigation -->
-            <nav data-role="navbar" data-id="myfooter" class="pagefooter">
-                <ul>
-                    <li><a href="#home"  data-icon="home">Home</a></li>
-                    <li><a href="#fav-page"  data-icon="star">Favourites</a></li>
-                    <li><a href="#information-page"  data-icon="info">Info</a></li>
-                </ul>
-            </nav>
+            <div data-role="footer" data-id="myfooter" class="pagefooter">
+                <div data-role="navbar">
+                    <ul>
+                        <li><a href="#home" data-icon="home">Home</a></li>
+                        <li><a href="#fav-page"  data-icon="star">Favourites</a></li>
+                        <li><a href="#information-page"  data-icon="info">Info</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
+
         <!--Info Page -->
         <div data-role="page" id="information-page" class="page">
             <!-- Header -->
-            <div data-role="header" class="pageheader" data-theme="a" data-id="myHeader">
-                <a href="#" data-rel="back" data-role="button">Go back</a>
+            <div data-role="header" class="pageheader" data-id="myHeader">
+                <a href="#" data-rel="back" data-role="button" data-icon="carat-l">&nbsp;&nbsp;Back</a>
                 <h1>Information</h1>
             </div>
+
             <!-- Content-->
             <div class="content" data-role="content">
                 <h2>The Wajarri Language</h2>
@@ -224,7 +244,7 @@
                     Talarang Peak, Western Australia.
                 </p>
                 <!--h2>The Wajarri Dictionary</h2-->
-                <img src="images/Wajarri_Dictionary_Cover.png" class="only-shrink" alt="" />
+                <img delayedsrc="images/Wajarri_Dictionary_Cover.jpg" class="only-shrink" alt="" />
                 <h2>How to use this Mobile Application</h2> 
                 <p>
                     This app is designed as a reference tool. While some cultural and other information has been included with the entries, not all information that is contained in the dictionary will be found in it. Some sensitive material has also been removed.
@@ -243,26 +263,25 @@ Some dialect information is available; you will see are Nhugarn, Byro, Birdungu,
 						data-cycle-fx='fade'
 						data-cycle-random=true
 						data-cycle-sync=true
-						data-cycle-loader=true
 						data-cycle-swipe=true
 						data-cycle-slides='>img'
                         data-cycle-log="false">
 
-						<img src="images/cycle/dsc_0282.jpg" alt="DSC_0282" title="DSC_0282" id="wows1_0" class="only-shrink" />
-						<img src="images/cycle/dsc_0289.jpg" alt="DSC_0289" title="DSC_0289" id="wows1_1" class="only-shrink" />
-						<img src="images/cycle/dsc_0290.jpg" alt="DSC_0290" title="DSC_0290" id="wows1_2" class="only-shrink" />
-						<img src="images/cycle/dsc_0328.jpg" alt="DSC_0328" title="DSC_0328" id="wows1_3" class="only-shrink" />
-						<img src="images/cycle/dsc_0336_1.jpg" alt="DSC_0336_1" title="DSC_0336_1" id="wows1_4" class="only-shrink" />
-						<img src="images/cycle/dsc_0009.jpg" alt="DSC_0009" title="DSC_0009" id="wows1_5" class="only-shrink" />
-						<img src="images/cycle/dsc_0034_2.jpg" alt="DSC_0034_2" title="DSC_0034_2" id="wows1_6" class="only-shrink" />
-						<img src="images/cycle/dsc_0040.jpg" alt="DSC_0040" title="DSC_0040" id="wows1_7" class="only-shrink" />
-						<img src="images/cycle/dsc_0045.jpg" alt="DSC_0045" title="DSC_0045" id="wows1_8" class="only-shrink" />
-						<img src="images/cycle/dsc_0181.jpg" alt="DSC_0181" title="DSC_0181" id="wows1_9" class="only-shrink" />
-						<img src="images/cycle/dsc_0182.jpg" alt="DSC_0182" title="DSC_0182" id="wows1_10" class="only-shrink" />
-						<img src="images/cycle/dsc_0185.jpg" alt="DSC_0185" title="DSC_0185" id="wows1_11" class="only-shrink" />
-						<img src="images/cycle/dsc_0187.jpg" alt="DSC_0187" title="DSC_0187" id="wows1_12" class="only-shrink" />
-						<img src="images/cycle/dsc_0196.jpg" alt="DSC_0196" title="DSC_0196" id="wows1_13" class="only-shrink" />
-						<img src="images/cycle/dsc_0202.jpg" alt="DSC_0202" title="DSC_0202" id="wows1_14" class="only-shrink" />
+						<img delayedsrc="images/cycle/dsc_0282.jpg" alt="DSC_0282" title="DSC_0282" id="wows1_0" class="only-shrink" />
+						<img delayedsrc="images/cycle/dsc_0289.jpg" alt="DSC_0289" title="DSC_0289" id="wows1_1" class="only-shrink" />
+						<img delayedsrc="images/cycle/dsc_0290.jpg" alt="DSC_0290" title="DSC_0290" id="wows1_2" class="only-shrink" />
+						<img delayedsrc="images/cycle/dsc_0328.jpg" alt="DSC_0328" title="DSC_0328" id="wows1_3" class="only-shrink" />
+						<img delayedsrc="images/cycle/dsc_0336_1.jpg" alt="DSC_0336_1" title="DSC_0336_1" id="wows1_4" class="only-shrink" />
+						<img delayedsrc="images/cycle/dsc_0009.jpg" alt="DSC_0009" title="DSC_0009" id="wows1_5" class="only-shrink" />
+						<img delayedsrc="images/cycle/dsc_0034_2.jpg" alt="DSC_0034_2" title="DSC_0034_2" id="wows1_6" class="only-shrink" />
+						<img delayedsrc="images/cycle/dsc_0040.jpg" alt="DSC_0040" title="DSC_0040" id="wows1_7" class="only-shrink" />
+						<img delayedsrc="images/cycle/dsc_0045.jpg" alt="DSC_0045" title="DSC_0045" id="wows1_8" class="only-shrink" />
+						<img delayedsrc="images/cycle/dsc_0181.jpg" alt="DSC_0181" title="DSC_0181" id="wows1_9" class="only-shrink" />
+						<img delayedsrc="images/cycle/dsc_0182.jpg" alt="DSC_0182" title="DSC_0182" id="wows1_10" class="only-shrink" />
+						<img delayedsrc="images/cycle/dsc_0185.jpg" alt="DSC_0185" title="DSC_0185" id="wows1_11" class="only-shrink" />
+						<img delayedsrc="images/cycle/dsc_0187.jpg" alt="DSC_0187" title="DSC_0187" id="wows1_12" class="only-shrink" />
+						<img delayedsrc="images/cycle/dsc_0196.jpg" alt="DSC_0196" title="DSC_0196" id="wows1_13" class="only-shrink" />
+						<img delayedsrc="images/cycle/dsc_0202.jpg" alt="DSC_0202" title="DSC_0202" id="wows1_14" class="only-shrink" />
 					</div>
 				</div>
                 <h2>Dedication</h2> 
@@ -270,14 +289,17 @@ Some dialect information is available; you will see are Nhugarn, Byro, Birdungu,
                     To Yamaljinggu, and to the memories of Alya and Ijida, unwavering long-serving contributors to this record, and to all Wajarri speakers named in the Wajarri Dictionary, and other contributors whose names may not be there who purposely left this legacy for their children and grandchildren.<br><br>
                     With deepest respect and gratitude to those people, the Wajarri who shared their words hence their world, thank you.
                 </p>
-        </div>
+            </div>
+
             <!-- The footer navigation -->
-            <nav data-role="navbar" data-id="myfooter" class="pagefooter">
-                <ul>
-                    <li><a href="#home" data-icon="home">Home</a></li>
-                    <li><a href="#fav-page"  data-icon="star">Favourites</a></li>
-                </ul>
-            </nav>
+            <div data-role="footer" data-id="myfooter" class="pagefooter">
+                <div data-role="navbar">
+                    <ul>
+                        <li><a href="#home" data-icon="home">Home</a></li>
+                        <li><a href="#fav-page"  data-icon="star">Favourites</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </body>
 </html>

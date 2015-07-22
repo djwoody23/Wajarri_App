@@ -10,13 +10,12 @@ var global =
 
     settings:
     {
-        collapsible_list: true
     },
 
     dictionary:
     {
         data: [],
-        loading: false,
+        loading: true,
 
         wajarri:
         {
@@ -49,6 +48,14 @@ var global =
             get: function()
             {
                 return this.data;
+            },
+            getId: function(index)
+            {
+                return this.data[index].id;
+            },
+            getIndex: function(id)
+            {
+                return this.data.findFirstIndexKV("id", id);
             },
             iterator: function(index)
             {
@@ -88,6 +95,14 @@ var global =
             {
                 return this.data;
             },
+            getId: function(index)
+            {
+                return this.data[index].id;
+            },
+            getIndex: function(id)
+            {
+                return this.data.findFirstIndexKV("id", id);
+            },
             iterator: function(index)
             {
                 return new Iterator(this.get(), index);
@@ -106,8 +121,8 @@ var global =
             },
             load: function()
             {
-    			this.items = helpers.user_data.getJSON("favourites", true) || this.items;
-    			//console.log("Loaded Favourites: " + JSON.stringify(this.items));
+                this.items = helpers.user_data.getJSON("favourites") || this.items;
+    			console.log("[FAVOURITES] Loaded: " + JSON.stringify(this.items));
             },
             save: function()
             {
@@ -167,6 +182,14 @@ var global =
             {
                 return this.update(global.dictionary.data);
             },
+            getId: function(index)
+            {
+                return this.data[index].id;
+            },
+            getIndex: function(id)
+            {
+                return this.data.indexOf(id);
+            },
             iterator: function(index)
             {
                 return new Iterator(this.get(), index);
@@ -175,7 +198,7 @@ var global =
 
         init: function()
         {
-            console.log("[DICTIONARY] Loading");
+            //console.log("[DICTIONARY] Loading");
             this.set();
             this.loading = true;
             //ajax call to Json Database
@@ -185,7 +208,7 @@ var global =
                 dataType: 'json',
                 mimeType: "application/json",
                 //async: false,
-                url: "wajarriDic19052015.json",
+                url: "wajarriDic19052015.min.json",
                 success: function(data)
                 {
                     global.dictionary.set(data);
@@ -211,13 +234,13 @@ var global =
             }
 
             var interval = 50;
-            var total = timeout || 10000;
+            var total = timeout || 0;
 
             var int_var = setInterval(check, 50);
 
             function check()
             {
-                if (global.dictionary.loading && total > 0)
+                if (global.dictionary.loading && (!timeout || total > 0))
                 {
                     total -= interval;
                 }
@@ -241,6 +264,11 @@ var global =
             this.data = data;
             this.wajarri.set(this.data);
             this.english.set(this.data);
+        },
+
+        iterator: function(index)
+        {
+            return new Iterator(this.data, index);
         }
     },
 
@@ -250,7 +278,4 @@ var global =
     }
 };
 
-$(document).ready(function()
-{
-    global.init();
-});
+global.init();

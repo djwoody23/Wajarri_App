@@ -3,16 +3,21 @@
 var Iterator = function(values, index)
 {
     this.values = values || [];
-    this.index = index == undefined ? 0 : index;
     this.length = this.values.length;
+    this.set(index);
 };
 Iterator.prototype.current = function()
 {
     return this.values[this.index];
 };
+Iterator.prototype.currentValue = function(id)
+{
+    var cur = this.current();
+    return cur ? cur[id] : null;
+};
 Iterator.prototype.set = function(index)
 {
-    this.index = index == undefined ? 0 : index;
+    this.index = index == undefined || index < 0 ? 0 : index;
 };
 Iterator.prototype.next = function()
 {
@@ -31,6 +36,21 @@ Iterator.prototype.previous = function()
         return this.current();
     }
     return undefined;
+};
+
+jQuery.cachedScript = function(url, options)
+{
+    // Allow user to set any option except for dataType, cache, and url
+    options = $.extend( options || {},
+    {
+        dataType: "script",
+        cache: true,
+        url: url
+    });
+
+    // Use $.ajax() since it is more flexible than $.getScript
+    // Return the jqXHR object so we can chain callbacks
+    return jQuery.ajax(options);
 };
 
 
@@ -61,6 +81,29 @@ function parseHash(url)
     }
 
     return { url: url, hash: hash, query: query };
+}
+
+
+function changePage(id, data, opts)
+{
+    $("body").pagecontainer("change", id + (data ? "?" + $.param(data) : ""), opts);
+}
+
+function replacePage(id, data)
+{
+    $.mobile.navigate.navigator.squash(id + (data ? "?" + $.param(data) : ""));
+}
+
+
+function loadDelayedImages(id)
+{
+    $(id).find('img[delayedsrc]').each(
+        function (i, val)
+        {
+            var $val = $(val);
+            $val.attr('src', $val.attr('delayedsrc')).removeAttr('delayedsrc');
+        }
+    );
 }
 
 
@@ -118,6 +161,37 @@ function findFirstItemContains(value, list)
         }
     }
     return undefined;
+}
+
+Array.prototype.findFirstIndex = function(check)
+{
+    var array = this;
+    for (var i = 0, len = array.length; i < len; i++)
+    {
+        if (check(array[i]))
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+Array.prototype.findFirstIndexKV = function(key, value)
+{
+    return this.findFirstIndex(function (item) { return item[key] === value; });
+}
+
+if (!Array.prototype.reduce)
+{
+    Array.prototype.reduce = function(cb, initial)
+    {
+        var data = initial;
+        for (var i = 0; i < this.length; i++)
+        {
+            data = cb(data, this[i], i, this);
+        }
+        return data;
+    }
 }
 
 function findItemContains(value, list, cb)
@@ -301,7 +375,7 @@ var helpers =
     		{
     			return JSON.parse(data);
     		}
-    		if (!no_warning) console.log("WARNING: Unable to load " + key + ".");
+    		if (!no_warning) console.log("[STORAGE] WARNING: Unable to load " + key + ".");
     		return null;
     	},
     	setJSON: function (key, value)
@@ -353,7 +427,7 @@ var helpers =
         warning_html:
             '<div class="warning">' +
                 '<span class="warning_text">Warning: Your browser (<span></span>) is unsupported. Upgrade! <a href="http://www.microsoft.com/en-au/download/internet-explorer-9-details.aspx">Link</a></span>' +
-                '<span class="warning_x" onclick="global.warning.hide()">x</span>' +
+                '<span class="warning_x">x</span>' +
             '</div>',
         show: function()
         {
@@ -367,12 +441,14 @@ var helpers =
         },
         init: function()
         {
-            if (helpers.browser.id == 'MSIE' && helpers.browser.version < 9)
-            {
-                $('body').append(this.warning_html);
-                $('.warning_text').find("span").html(helpers.browser.text);
-                this.show();
-            }
+            $(document).ready(function() {
+                if (helpers.browser.id == 'MSIE' && helpers.browser.version < 9)
+                {
+                    $('body').append(helpers.warning.warning_html);
+                    $('.warning_text').find("span").html(helpers.browser.text);
+                    $('.warning_x').on('tap', function() { helpers.warning.hide(); });
+                }
+            });
         }
     },
 
@@ -384,4 +460,4 @@ var helpers =
     }
 };
 
-$(document).ready(function() { helpers.init(); });
+helpers.init(); 
